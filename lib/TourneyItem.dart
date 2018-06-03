@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'api.dart';
+import 'TourneyPage.dart';
 
 //Map of months from their integer rep
 Map<int, String> months = {
@@ -23,7 +23,6 @@ Map<int, String> months = {
 /// Requires a json object of the tourney info for that tounrey
 class TourneyItem extends StatelessWidget {
   final Map _json;
-  final _api = Api();
 
   TourneyItem(this._json);
 
@@ -31,7 +30,9 @@ class TourneyItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Card(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new TourneyPage(_json)));
+        },
         highlightColor: Theme.of(context).accentColor,
         splashColor: Theme.of(context).accentColor,
         child: Container(
