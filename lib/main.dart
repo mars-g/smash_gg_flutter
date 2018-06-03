@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api.dart';
 import 'TourneyItem.dart';
+import 'TourneyPage.dart';
 
 
 void main() => runApp(new MyApp());
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
 
       ),
       home: new MyHomePage(title: 'Smash GG'),
+      routes: <String, WidgetBuilder>{
+      },
     );
   }
 }
