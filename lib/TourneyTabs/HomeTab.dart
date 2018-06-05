@@ -23,7 +23,6 @@ class HomeTab extends StatelessWidget {
   HomeTab(this._json);
   @override
   Widget build(BuildContext context) {
-
     bool hasBanner = false;
     int bannerNum;
     for (int i = 0; i < _json['images'].length; i++) {
@@ -33,167 +32,177 @@ class HomeTab extends StatelessWidget {
       }
     }
     //there is a banner image, which should be the top
-      return new ListView(
-        children: <Widget>[
-          bannerImage(hasBanner, bannerNum),
-
-          new Padding(
-            padding: EdgeInsets.all(6.0),
+    return new ListView(
+      children: <Widget>[
+        bannerImage(hasBanner, bannerNum),
+        new Padding(
+          padding: EdgeInsets.all(6.0),
+        ),
+        dateText(_json),
+        new Padding(
+          padding: EdgeInsets.all(12.0),
+        ),
+        new Text(
+          "Details",
+          style: new TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
           ),
-          dateText(_json),
-          new Padding(padding: EdgeInsets.all(12.0),),
-          new Text(
-            "Details",
-            style: new TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        new Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.0),
+            child: new Center(
+                child: new MarkdownBody(
+              data: _json['details'],
+            ))),
+        new Text(
+          "Location",
+          style: new TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
           ),
-          new Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.0),
-              child: new Center(
-                  child: new MarkdownBody(
-                data: _json['details'],
-              ))),
-          new Text(
-            "Location",
-            style: new TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        locationText(context),
+        locationWidget(),
+        gettingThereText(),
+        new Text(
+          "Additional Information",
+          style: new TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
           ),
-          locationText(context),
-          locationWidget(),
-          gettingThereText(),
-          new Text(
-            "Additional Information",
-            style: new TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        new Text(
+          "Contact",
+          style: new TextStyle(
+            fontSize: 16.0,
           ),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          new Text(
-            "Contact",
-            style: new TextStyle(
-              fontSize: 16.0,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        contactText(context),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        new Text(
+          "Rules",
+          style: new TextStyle(
+            fontSize: 16.0,
           ),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          contactText(context),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          new Text(
-            "Rules",
-            style: new TextStyle(
-              fontSize: 16.0,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        rulesText(),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        new Text(
+          "Prizes",
+          style: new TextStyle(
+            fontSize: 16.0,
           ),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          rulesText(),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          new Text(
-            "Prizes",
-            style: new TextStyle(
-              fontSize: 16.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          new Padding(padding: EdgeInsets.all(3.0)),
-          prizesText(),
-        ],
-      );
-
+          textAlign: TextAlign.center,
+        ),
+        new Padding(padding: EdgeInsets.all(3.0)),
+        prizesText(),
+      ],
+    );
   }
 
   ///Display banner image
-  Widget bannerImage(bool hasBanner, int bannerNum){
-    if (!hasBanner){
+  Widget bannerImage(bool hasBanner, int bannerNum) {
+    if (!hasBanner) {
       return new Text(" ");
-    }
-    else {
+    } else {
       return new Image.network(_json['images'][bannerNum]['url']);
     }
   }
 
   ///Generate the text for the prizes
-  Widget prizesText(){
+  Widget prizesText() {
     String prizes = "No prize info provided";
-    if (_json['prizes'] != null){
+    if (_json['prizes'] != null) {
       prizes = _json['prizes'];
     }
-    return new Padding(padding: EdgeInsets.all(6.0),child:Text(prizes));
+    return new Padding(padding: EdgeInsets.all(6.0), child: Text(prizes));
   }
 
-
   ///Generate the text for the rules
-  Widget rulesText(){
+  Widget rulesText() {
     String rulesText = "No rules info provided";
-    if (_json['rules'] != null){
+    if (_json['rules'] != null) {
       rulesText = _json['rules'];
     }
-    return new Padding(padding: EdgeInsets.all(6.0),child:Text(rulesText));
+    return new Padding(padding: EdgeInsets.all(6.0), child: Text(rulesText));
   }
 
   ///Generate the contact portion of the text
-  Widget contactText(BuildContext context){
+  Widget contactText(BuildContext context) {
     String contactEmail = _json['contactEmail'];
     String contactTwitter = _json['contactTwitter'];
     String contactPhone = _json['contactPhone'];
-    if (contactEmail == null && contactTwitter == null && contactPhone == null){
-      return new Text("No contact info provided",
-      textAlign: TextAlign.center,);
+    if (contactEmail == null &&
+        contactTwitter == null &&
+        contactPhone == null) {
+      return new Text(
+        "No contact info provided",
+        textAlign: TextAlign.center,
+      );
     }
-    if (_json['contactEmail'] == null){
+    if (_json['contactEmail'] == null) {
       contactEmail = " ";
     }
-    if (_json['contactTwitter'] == null){
+    if (_json['contactTwitter'] == null) {
       contactTwitter = " ";
     }
-    if (_json['contactPhone'] == null){
+    if (_json['contactPhone'] == null) {
       contactPhone = " ";
     }
-    return new Padding(padding: EdgeInsets.all(6.0), child:Text('Email:' + contactEmail + '\nTwitter: ' + contactTwitter + '\nPhone: ' + contactPhone));
-
-
+    return new Padding(
+        padding: EdgeInsets.all(6.0),
+        child: Text('Email:' +
+            contactEmail +
+            '\nTwitter: ' +
+            contactTwitter +
+            '\nPhone: ' +
+            contactPhone));
   }
+
   ///Generates Location Text for the venue and venue address
-  Widget locationText(BuildContext context){
-    if (_json['venueName'] != null && _json['venueAddress'] != null){
+  Widget locationText(BuildContext context) {
+    if (_json['venueName'] != null && _json['venueAddress'] != null) {
       String venueName = _json['venueName'];
-      return new Padding(padding: EdgeInsets.all(6.0),child:RichText(text: new TextSpan(
-        text:  "$venueName \n",
-        style: DefaultTextStyle.of(context).style,
-        children: <TextSpan>[
-          new TextSpan(text: _json['venueAddress'],)
-        ]
-      )));
-    }
-    else if (_json['venueName'] != null){
-      return new Padding(padding: EdgeInsets.all(6.0),child:Text(_json['venueName']));
-    }
-    else if(_json['venueAddress'] != null){
-      return new Padding(padding: EdgeInsets.all(6.0),child:Text(_json['venueAddress']));
-    }
-    else {
-      return new Padding(padding: EdgeInsets.all(6.0),child:Text("No location info"));
+      return new Padding(
+          padding: EdgeInsets.all(6.0),
+          child: RichText(
+              text: new TextSpan(
+                  text: "$venueName \n",
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                new TextSpan(
+                  text: _json['venueAddress'],
+                )
+              ])));
+    } else if (_json['venueName'] != null) {
+      return new Padding(
+          padding: EdgeInsets.all(6.0), child: Text(_json['venueName']));
+    } else if (_json['venueAddress'] != null) {
+      return new Padding(
+          padding: EdgeInsets.all(6.0), child: Text(_json['venueAddress']));
+    } else {
+      return new Padding(
+          padding: EdgeInsets.all(6.0), child: Text("No location info"));
     }
   }
 
   ///Creates link to the map
-  void launchMapsPlace() async{
+  void launchMapsPlace() async {
     String mapsPlaceId;
     if (_json['venueAddress'] != null) {
       mapsPlaceId = _json['venueAddress'];
-    }
-    else if(_json['venueName'] != null){
+    } else if (_json['venueName'] != null) {
       mapsPlaceId = _json['venueName'];
-    }
-    else {
+    } else {
       return;
     }
     String url = 'https://www.google.com/maps/search/?api=1&query=$mapsPlaceId';
@@ -205,21 +214,25 @@ class HomeTab extends StatelessWidget {
   }
 
   ///Returns a button that opens maps when clicked
-  Widget locationWidget(){
-    if (_json['venueName'] == null && _json['venueAddress'] == null){
+  Widget locationWidget() {
+    if (_json['venueName'] == null && _json['venueAddress'] == null) {
       return new Text(" ");
     }
-    return new Padding(padding: EdgeInsets.symmetric(horizontal:120.0),child:FlatButton(onPressed: launchMapsPlace, color: Colors.blueAccent, child: Text("Open in Maps")));
+    return new Padding(
+        padding: EdgeInsets.symmetric(horizontal: 120.0),
+        child: FlatButton(
+            onPressed: launchMapsPlace,
+            color: Colors.blueAccent,
+            child: Text("Open in Maps")));
   }
 
   ///Creates the text to display the date
   Widget dateText(Map json) {
     DateTime dateTime =
-    new DateTime.fromMillisecondsSinceEpoch(json['startAt'] * 1000);
+        new DateTime.fromMillisecondsSinceEpoch(json['startAt'] * 1000);
     String month = months[dateTime.month];
     String date = dateTime.day.toString();
-    dateTime =
-    new DateTime.fromMillisecondsSinceEpoch(json['endAt'] * 1000);
+    dateTime = new DateTime.fromMillisecondsSinceEpoch(json['endAt'] * 1000);
     String endDate = dateTime.day.toString();
     String endMonth = months[dateTime.month];
     if (endDate == date && endMonth == month) {
@@ -230,8 +243,7 @@ class HomeTab extends StatelessWidget {
           fontSize: 28.0,
         ),
       );
-    }
-    else {
+    } else {
       return new Text(
         '$month $date - $endMonth $endDate',
         textAlign: TextAlign.center,
@@ -242,13 +254,13 @@ class HomeTab extends StatelessWidget {
     }
   }
 
-
   ///Creates the text for the getting there instructions
-  Widget gettingThereText(){
-    if (_json['gettingThere'] == null){
+  Widget gettingThereText() {
+    if (_json['gettingThere'] == null) {
       return new Text(" ");
     }
-    return new Padding(padding: EdgeInsets.all(6.0),child:Text("Getting there:\n " + _json['gettingThere']));
+    return new Padding(
+        padding: EdgeInsets.all(6.0),
+        child: Text("Getting there:\n " + _json['gettingThere']));
   }
-
 }
