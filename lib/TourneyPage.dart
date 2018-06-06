@@ -63,7 +63,7 @@ class _TourneyPageState extends State<TourneyPage> with SingleTickerProviderStat
         ],
       ),
       body: new TabBarView(
-        children: <Widget>[new HomeTab(_json), new EventTab(), new AttendeesTab()],
+        children: <Widget>[new HomeTab(_json), new EventTab(_json), new AttendeesTab()],
         controller: controller,
       ),
       bottomNavigationBar: new Material(
