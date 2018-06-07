@@ -53,9 +53,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Api _api = Api();
-  void _incrementCounter() {
+  String searchTerm = "";
+
+  void _updateFilters() {
     setState(() {});
   }
+
+  void _search(String searchInput){
+    setState(() {
+      searchTerm = searchInput;
+    });
+  }
+
+  void doNil(){}
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         //also create a login button that will be used to login and exist in the appbar
         actions: <Widget>[
           new FlatButton(
-              onPressed: _incrementCounter,
+              onPressed: doNil,
               //color: Colors.redAccent[700],
               color: Colors.white12,
               shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
@@ -85,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Column(
         children: <Widget>[
           new TextField(
+            onSubmitted: _search,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               fillColor: Colors.grey[150],
@@ -100,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //padding: EdgeInsets.all(1.2),
               child:
                 new FutureBuilder(
-                  future: _api.getListOfTourneys(),
+                  future: _api.getListOfTourneys(searchTerm),
                   builder: (context, snapshot){
                     if(snapshot.hasData){
                       return new Expanded( child : ListView.builder(
@@ -113,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ));
                     }
                     else if (snapshot.hasError){
-                      return new Text("${snapshot.error}");
+                      return new Text("No results found");
                     }
                     else {
                       return new CircularProgressIndicator();
@@ -122,6 +133,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
             ),
         ],
+      ),
+      floatingActionButton: new FloatingActionButton(onPressed: (){},
+      child: new Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }

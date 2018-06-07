@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:smash_gg/api.dart';
 
 Map<int, String> months = {
   1: 'January',
@@ -23,6 +24,7 @@ class HomeTab extends StatelessWidget {
   HomeTab(this._json);
   @override
   Widget build(BuildContext context) {
+    final Api _api = new Api();
     bool hasBanner = false;
     int bannerNum;
     for (int i = 0; i < _json['images'].length; i++) {
@@ -39,6 +41,26 @@ class HomeTab extends StatelessWidget {
           padding: EdgeInsets.all(6.0),
         ),
         dateText(_json),
+        FutureBuilder(
+          future: _api.getAttendeesList(_json['slug']),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0){
+                return new Text(" ");
+              }
+              return new Padding(padding: new EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 0.0), child: Text(snapshot.data.length.toString() + ' attendees',
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                fontSize: 16.0,
+                color: Colors.red,
+              ),));
+            } else if (snapshot.hasError) {
+              return new Text("${snapshot.error}");
+            } else {
+              return new Text(" ");
+            }
+          },
+        ),
         new Padding(
           padding: EdgeInsets.all(12.0),
         ),
@@ -53,9 +75,7 @@ class HomeTab extends StatelessWidget {
         new Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.0),
             child: new Center(
-                child: new MarkdownBody(
-              data: _json['details'],
-            ))),
+                child: detailsText())),
         new Text(
           "Location",
           style: new TextStyle(
@@ -109,6 +129,16 @@ class HomeTab extends StatelessWidget {
     );
   }
 
+  ///Display tourney text
+  Widget detailsText(){
+    if (_json['details'] == null){
+      return new Text("No tournament description");
+    }
+    return new MarkdownBody(
+      data: _json['details'],
+    );
+  }
+
   ///Display banner image
   Widget bannerImage(bool hasBanner, int bannerNum) {
     if (!hasBanner) {
@@ -146,7 +176,6 @@ class HomeTab extends StatelessWidget {
         contactPhone == null) {
       return new Text(
         "No contact info provided",
-        textAlign: TextAlign.center,
       );
     }
     if (_json['contactEmail'] == null) {
