@@ -24,7 +24,17 @@ class Api {
 
 
 
-  Future<List> getListOfTourneys() async{
+  Future<List> getListOfTourneys(String searchFilter) async{
+    if (searchFilter != ""){
+      final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":false,"videogameIds":"1","name":"$searchFilter"}');
+      final jsonResponse = await _getJson(uri);
+      if (jsonResponse == null || jsonResponse['items'] == null) {
+        print('Error retrieving tournament.');
+        print(uri);
+        return null;
+      }
+      return jsonResponse['items']['entities']['tournament'];
+    }
     final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":true,"videogameIds":1}');
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['items'] == null) {
@@ -32,7 +42,6 @@ class Api {
       print(uri);
       return null;
     }
-    print(jsonResponse['total_count']);
     return jsonResponse['items']['entities']['tournament'];
   }
 
@@ -128,23 +137,54 @@ class Api {
 
 
 
-
-  //This code is left here for example purposes, should be deleted in production
-  /*/// Returns a double, which is the converted amount. Returns null on error.
-  Future<double> convert(
-      String category, String amount, String fromUnit, String toUnit) async {
-    final uri = Uri.https(_url, '/$category/convert',
-        {'amount': amount, 'from': fromUnit, 'to': toUnit});
+  ///Gets list of all attendees for a tourney
+  ///
+  /// Requires the slug of the tourney
+  Future<List> getAttendeesList(String slug) async {
+    Map<String,String> params = new Map();
+    params['expand\[\]'] = 'participants';
+    final uri = Uri.https(_url, '/$slug',params);
     final jsonResponse = await _getJson(uri);
-    if (jsonResponse == null || jsonResponse['status'] == null) {
-      print('Error retrieving conversion.');
-      return null;
-    } else if (jsonResponse['status'] == 'error') {
-      print(jsonResponse['message']);
+    if (jsonResponse == null || jsonResponse['entities'] == null){
+      print("Error retrieving attendees");
+      print(uri);
       return null;
     }
-    return jsonResponse['conversion'].toDouble();
-  }*/
+    return jsonResponse['entities']['participants'];
+  }
+
+  ///List of all the entrants
+  Future<List> getEntrantsList(String slug) async{
+    Map<String,String> params = new Map();
+    params['expand\[\]'] = 'entrants';
+    final uri = Uri.https(_url, '/$slug',params);
+    final jsonResponse = await _getJson(uri);
+    if (jsonResponse == null || jsonResponse['entities'] == null){
+      print("Error retrieving entrants");
+      print(uri);
+      return null;
+    }
+    return jsonResponse['entities']['entrants'];
+  }
+
+  ///Returns list of top players order
+  ///
+  /// requires the slug for the event
+  Future<List> getTopAttendees(String slug) async{
+    final uri = Uri.https(_url2, '/api/-/gg_api./$slug;expand=["details","fullEntrantCount","tagsByEntity","tagsByContainer","stream"];mutations=["tournamentEventCardData"];slug=optic-arena');
+    final jsonResponse = await _getJson(uri);
+    if (jsonResponse == null || jsonResponse['entities'] == null){
+      print("Error retrieving entrants");
+      print(uri);
+      return null;
+    }
+    Map returnMap = jsonResponse['entities']['event']['mutations']['cardData'];
+    for (var value in returnMap.values){
+      return value['topAttendees'];
+    }
+
+    return jsonResponse['entities']['event'];
+  }
 
   /// Fetches and decodes a JSON object represented as a Dart [Map].
   ///
