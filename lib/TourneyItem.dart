@@ -122,14 +122,15 @@ Text dateText(Map json) {
   dateTime = new DateTime.fromMillisecondsSinceEpoch(json['endAt'] * 1000);
   String endDate = dateTime.day.toString();
   String endMonth = months[dateTime.month];
+  String year = dateTime.year.toString();
   if (endDate == date && endMonth == month) {
     return new Text(
-      '$month $date',
+      '$month $date, $year',
       textAlign: TextAlign.left,
     );
   } else {
     return new Text(
-      '$month $date - $endMonth $endDate',
+      '$month $date - $endMonth $endDate, $year',
       textAlign: TextAlign.left,
     );
   }

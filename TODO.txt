@@ -1,7 +1,6 @@
 TODO:
-	Add static map to home page
+	Add static map to tourney page
 		use https://medium.com/@matthew.smith_66715/maps-in-flutter-a1ac49ab554b for info
 	Add attendees tab
-	Add events tab
-		Should be a listview of items
-			Items should be clickable cards that show name of event, # of ppl in event, and top ppl, as well as placements if applicable
+	Add brackets when event tabs are clicked on
+	Add places to filter options

@@ -24,25 +24,90 @@ class Api {
 
 
 
-  Future<List> getListOfTourneys(String searchFilter) async{
-    if (searchFilter != ""){
-      final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":false,"videogameIds":"1","name":"$searchFilter"}');
-      final jsonResponse = await _getJson(uri);
-      if (jsonResponse == null || jsonResponse['items'] == null) {
-        print('Error retrieving tournament.');
-        print(uri);
-        return null;
-      }
-      return jsonResponse['items']['entities']['tournament'];
+  Future getListOfTourneys(String searchTerm, List filters) async{
+    //first step is to generate filter params
+    String upcoming = 'false';
+    String featured = '';
+    String eventRegOpen = '';
+    String regOpen = '';
+    String attendeeCount = '';
+    bool attendeeFlag = false;
+    String isLeague = '';
+    String online = '';
+    String offline = '';
+    String name = '';
+    if (filters[0]){
+        upcoming = 'true';
     }
-    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":true,"videogameIds":1}');
+    if (filters[1]){
+      featured = ',"isFeatured":true';
+    }
+    if (filters[2]){
+      eventRegOpen = ',"eventRegOpen":true';
+    }
+    if (filters[3]){
+      regOpen = ',"regOpen":true';
+    }
+    if (filters[4]){
+      attendeeCount += '"lt:100"';
+      attendeeFlag = true;
+    }
+    if (filters[5]){
+      if (attendeeFlag){
+        attendeeCount += ',';
+      }
+      attendeeCount += '"gt:100,lte:200"';
+      attendeeFlag = true;
+    }
+    if (filters[6]){
+      if (attendeeFlag){
+        attendeeCount += ',';
+      }
+      attendeeCount += '"gt:200,lte:500"';
+      attendeeFlag = true;
+    }
+    if (filters[7]){
+      if (attendeeFlag){
+        attendeeCount += ',';
+      }
+      attendeeCount += '"gt:500,lte:1000"';
+      attendeeFlag = true;
+    }
+    if (filters[8]){
+      if (attendeeFlag){
+        attendeeCount += ',';
+      }
+      attendeeCount += '"gt:1000"';
+      attendeeFlag = true;
+    }
+    if (attendeeFlag){
+      attendeeCount = ',"attendeeCount":[' + attendeeCount + ']';
+    }
+    if (filters[11]){
+      isLeague = ',"isLeague": true';
+    }
+    if (filters[12]){
+      online = ',"online":true';
+    }
+    if(filters[13]){
+      offline = ',"offline::true';
+    }
+    if (searchTerm != ''){
+      name = ',"name":"' + searchTerm + '"';
+    }
+    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":$upcoming,"videogameIds":1' + name + featured + regOpen + eventRegOpen + attendeeCount + isLeague + online + offline + '}');
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['items'] == null) {
       print('Error retrieving tournament.');
       print(uri);
       return null;
     }
-    return jsonResponse['items']['entities']['tournament'];
+    print(uri);
+    if (jsonResponse['items']['entities']['tournament'] is List){
+      return jsonResponse['items']['entities']['tournament'];
+
+    }
+    return jsonResponse['items']['entities'];
   }
 
   /// Gets all the main info from a tourney
