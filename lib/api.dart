@@ -236,7 +236,7 @@ class Api {
   ///
   /// requires the slug for the event
   Future<List> getTopAttendees(String slug) async{
-    final uri = Uri.https(_url2, '/api/-/gg_api./$slug;expand=["details","fullEntrantCount","tagsByEntity","tagsByContainer","stream"];mutations=["tournamentEventCardData"];slug=optic-arena');
+    final uri = Uri.https(_url2, '/api/-/gg_api./$slug;expand=["details","fullEntrantCount","tagsByEntity","tagsByContainer","stream"];mutations=["tournamentEventCardData"]');
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['entities'] == null){
       print("Error retrieving entrants");
@@ -246,6 +246,25 @@ class Api {
     Map returnMap = jsonResponse['entities']['event']['mutations']['cardData'];
     for (var value in returnMap.values){
       return value['topAttendees'];
+    }
+
+    return jsonResponse['entities']['event'];
+  }
+
+  ///Returns list of placements for top players
+  ///
+  /// requires the slug for the event
+  Future<List> getTopPlacers(String slug) async{
+    final uri = Uri.https(_url2, '/api/-/gg_api./$slug;expand=["details","fullEntrantCount","tagsByEntity","tagsByContainer","stream"];mutations=["tournamentEventCardData"]');
+    final jsonResponse = await _getJson(uri);
+    if (jsonResponse == null || jsonResponse['entities'] == null){
+      print("Error retrieving entrants");
+      print(uri);
+      return null;
+    }
+    Map returnMap = jsonResponse['entities']['event']['mutations']['cardData'];
+    for (var value in returnMap.values){
+      return value['topPlacers'];
     }
 
     return jsonResponse['entities']['event'];
