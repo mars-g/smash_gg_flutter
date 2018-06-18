@@ -207,7 +207,7 @@ class Api {
   /// Requires the slug of the tourney
   Future<List> getAttendeesList(String slug) async {
     Map<String,String> params = new Map();
-    params['expand\[\]'] = 'participants';
+    params['expand\[\]'] = 'player';
     final uri = Uri.https(_url, '/$slug',params);
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['entities'] == null){
@@ -215,7 +215,7 @@ class Api {
       print(uri);
       return null;
     }
-    return jsonResponse['entities']['participants'];
+    return jsonResponse['entities']['player'];
   }
 
   ///List of all the entrants

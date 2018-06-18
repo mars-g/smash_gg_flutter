@@ -31,6 +31,8 @@ flutter:
   assets:
     - assets/cup.icon.png
     - assets/filter.icon.png
+    - assets/twitter.icon.png
+    - assets/twitch.icon.png
 
 
   # To add assets to your application, add an assets section, like this:
