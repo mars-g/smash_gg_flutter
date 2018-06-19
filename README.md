@@ -1,6 +1,6 @@
 # smash_gg
 
-A new Flutter application.
+A fluuter application to interface with the smash.gg api. It is intended to be a published app with all the core functionality of the smash.gg website.
 
 ## Getting Started
 

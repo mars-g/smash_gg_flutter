@@ -52,13 +52,46 @@ class AttendeeCard extends StatelessWidget {
                       style: TextStyle(fontSize: 18.0),
                       textAlign: TextAlign.left,
                     ),
-                    new Text(_json['name']),
-                    new Flexible(child: Row()),
+                    new Text(_json['name'], style: TextStyle(fontSize: 12.0),),
+                    new Row(
+                      children: <Widget>[
+                        getTwitchIcon(),
+                        getTwitterIcon(),
+                      ],
+                    ),
                   ],
-                ))
+                )),
+                new Flexible(
+                  child: new Column(
+                    children: <Widget>[
+                      
+                    ],
+                  ),
+                )
               ],
             ),
           )),
     );
+  }
+
+  //Used to add twitter icon if necessary
+  Widget getTwitterIcon() {
+    if (_json['twitchStream'] != null) {
+      return new Image.asset('assets/twitter.icon.png',
+          height: 15.0, width: 15.0);
+    }
+    return new Text('');
+  }
+
+  //Used to add twitch icon if necessary
+  Widget getTwitchIcon() {
+    if (_json['twitterHandle'] != null) {
+      return new Image.asset(
+        'assets/twitch.icon.png',
+        height: 15.0,
+        width: 15.0,
+      );
+    }
+    return new Text('');
   }
 }
