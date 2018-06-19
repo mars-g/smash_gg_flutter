@@ -6,8 +6,8 @@ class AttendeeCard extends StatelessWidget {
   final Map _json;
   final rng = new Random();
 
-  final height = 65.0;
-  final width = 65.0;
+  final height = 50.0;
+  final width = 50.0;
 
   AttendeeCard(this._json);
 
@@ -42,6 +42,7 @@ class AttendeeCard extends StatelessWidget {
           splashColor: Theme.of(context).accentColor,
           child: Container(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 addImage(),
                 new Flexible(
@@ -64,7 +65,8 @@ class AttendeeCard extends StatelessWidget {
                 )),
                 new Flexible(
                   child: locationText(),
-                )
+                ),
+                eventText(),
               ],
             ),
           )),
@@ -72,7 +74,18 @@ class AttendeeCard extends StatelessWidget {
   }
 
   Widget eventText(){
-    return new Text('');
+    String text = '';
+    if (_json['events'].length == 0){
+      return new Text('');
+    }
+    int eventNum = _json['events'].length;
+
+    text += _json['events'][0]['name'];
+    for (int i = 1; i < _json['events'].length; i++){
+      text +='\n';
+      text += _json['events'][i]['name'];
+    }
+    return new Text(text, style: TextStyle(fontSize: 12.0),);
   }
 
   ///used to display the location of an attendee
