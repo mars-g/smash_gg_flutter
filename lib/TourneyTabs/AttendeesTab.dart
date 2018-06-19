@@ -33,7 +33,7 @@ class AttendeesTab extends StatelessWidget {
           ],
         ),
         new FutureBuilder(
-            future: _api.getAttendeesList(_json['slug']),
+            future: _api.getAttendeesInfo(_json['slug'], '1'),
             builder: (context, snapshot) {
               if (snapshot.hasData){
                 return new Expanded(child: ListView.builder(

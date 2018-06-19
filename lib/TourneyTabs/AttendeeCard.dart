@@ -12,9 +12,9 @@ class AttendeeCard extends StatelessWidget {
   AttendeeCard(this._json);
 
   Widget addImage() {
-    if (_json['images'].length != 0) {
+    if (_json['player']['images'].length != 0) {
       return new Image.network(
-        _json['images'][0]['url'],
+        _json['player']['images'][0]['url'],
         height: height,
         width: width,
       );
@@ -52,8 +52,9 @@ class AttendeeCard extends StatelessWidget {
                       style: TextStyle(fontSize: 18.0),
                       textAlign: TextAlign.left,
                     ),
-                    new Text(_json['name'], style: TextStyle(fontSize: 12.0),),
+                    //new Text(_json['player']['name'], style: TextStyle(fontSize: 12.0),),
                     new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         getTwitchIcon(),
                         getTwitterIcon(),
@@ -62,11 +63,7 @@ class AttendeeCard extends StatelessWidget {
                   ],
                 )),
                 new Flexible(
-                  child: new Column(
-                    children: <Widget>[
-                      
-                    ],
-                  ),
+                  child: locationText(),
                 )
               ],
             ),
@@ -74,9 +71,37 @@ class AttendeeCard extends StatelessWidget {
     );
   }
 
+  Widget eventText(){
+    return new Text('');
+  }
+
+  ///used to display the location of an attendee
+  ///
+  ///returns a column with state and us for us players and returns a text of country else
+  Widget locationText(){
+    if (_json['player']['state'] != null){
+      return new Column(children: <Widget>[
+        new Text(_json['player']['country']),
+        new Text(_json['player']['state'], style: TextStyle(fontSize: 12.0),),
+      ],);
+    }
+    else if (_json['player']['region'] != null){
+      return new Column(children: <Widget>[
+        new Text(_json['player']['country']),
+        new Text(_json['player']['region'], style: TextStyle(fontSize: 12.0),),
+      ],);
+    }
+    else if (_json['player']['country'] != null){
+      return new Text(_json['player']['country']);
+    }
+    return new Text('');
+
+
+  }
+
   //Used to add twitter icon if necessary
   Widget getTwitterIcon() {
-    if (_json['twitchStream'] != null) {
+    if (_json['player']['twitchStream'] != null) {
       return new Image.asset('assets/twitter.icon.png',
           height: 15.0, width: 15.0);
     }
@@ -85,7 +110,7 @@ class AttendeeCard extends StatelessWidget {
 
   //Used to add twitch icon if necessary
   Widget getTwitchIcon() {
-    if (_json['twitterHandle'] != null) {
+    if (_json['player']['twitterHandle'] != null) {
       return new Image.asset(
         'assets/twitch.icon.png',
         height: 15.0,

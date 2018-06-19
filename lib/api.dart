@@ -102,7 +102,6 @@ class Api {
       print(uri);
       return null;
     }
-    print(uri);
     if (jsonResponse['items']['entities']['tournament'] is List){
       return jsonResponse['items']['entities']['tournament'];
 
@@ -207,7 +206,7 @@ class Api {
   /// Requires the slug of the tourney
   Future<List> getAttendeesList(String slug) async {
     Map<String,String> params = new Map();
-    params['expand\[\]'] = 'player';
+    params['expand\[\]'] = 'participants';
     final uri = Uri.https(_url, '/$slug',params);
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['entities'] == null){
@@ -215,7 +214,20 @@ class Api {
       print(uri);
       return null;
     }
-    return jsonResponse['entities']['player'];
+    return jsonResponse['entities']['participants'];
+  }
+
+  Future<List> getAttendeesInfo(String slug, String pageNum) async{
+    Map<String,String> params = new Map();
+    params['filter\[page'] = '$pageNum\]';
+    final uri = Uri.https(_url, '/$slug/attendees',params);
+    final jsonResponse = await _getJson(uri);
+    if (jsonResponse == null || jsonResponse['items'] == null){
+      print("Error retrieving attendees");
+      print(uri);
+      return null;
+    }
+    return jsonResponse['items']['entities']['attendee'];
   }
 
   ///List of all the entrants
