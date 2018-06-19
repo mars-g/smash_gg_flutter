@@ -3,7 +3,6 @@ TODO:
 		use https://medium.com/@matthew.smith_66715/maps-in-flutter-a1ac49ab554b for info
 	Add attendees tab
 	    Style and make functional the search and filter button
-	    Add the attendees list
 	Add brackets when event tabs are clicked on
 	    Fine for now, but should be changed eventually
 	Add places to filter options
