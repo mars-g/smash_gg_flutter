@@ -65,7 +65,8 @@ class TourneyItem extends StatelessWidget {
                   ],
                 ),
               ),
-              FutureBuilder(
+              attendeeCount(),
+              /*FutureBuilder(
                 future: _api.getAttendeesList(_json['slug']),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -81,12 +82,21 @@ class TourneyItem extends StatelessWidget {
                   }
                 },
 
-              )
+              )*/
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget attendeeCount(){
+    if (_json['mutations']['cardData'] != null){
+      for(var value in _json['mutations']['cardData'].values){
+        return new Text(value['attendeeCount'].toString(), style: TextStyle(color: Colors.red, fontSize: 12.0),);
+      }
+    }
+    return new Text('');
   }
 
   ///function to display find image source from map

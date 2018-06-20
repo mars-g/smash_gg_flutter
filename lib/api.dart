@@ -102,6 +102,7 @@ class Api {
       print(uri);
       return null;
     }
+    print(uri);
     if (jsonResponse['items']['entities']['tournament'] is List){
       return jsonResponse['items']['entities']['tournament'];
 
@@ -217,9 +218,9 @@ class Api {
     return jsonResponse['entities']['participants'];
   }
 
-  Future<List> getAttendeesInfo(String slug, String pageNum) async{
+  Future<List> getAttendeesInfo(String slug, int pageNum) async{
     Map<String,String> params = new Map();
-    params['filter\[page'] = '$pageNum\]';
+    params['page'] = '$pageNum';
     final uri = Uri.https(_url, '/$slug/attendees',params);
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['items'] == null){

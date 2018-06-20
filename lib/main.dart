@@ -95,9 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _search(String searchInput) {
     setState(() {
-      searchTerm = searchInput;
-      //convienence change to deselect upcoming when searching
+      //convenience change to deselect upcoming when searching
       filterChecks[0] = false;
+      searchTerm = searchInput;
     });
   }
 
