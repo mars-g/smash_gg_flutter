@@ -27,7 +27,7 @@ class AttendeeCard extends StatelessWidget {
         child: new Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Text(
-              _json['gamerTag'][0],
+              _json['gamerTag'][0].toUpperCase(),
               textAlign: TextAlign.center,
               style: new TextStyle(fontSize: 25.0),
             )));
@@ -42,7 +42,7 @@ class AttendeeCard extends StatelessWidget {
           splashColor: Theme.of(context).accentColor,
           child: Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 addImage(),
                 new Flexible(
@@ -51,9 +51,9 @@ class AttendeeCard extends StatelessWidget {
                     new Text(
                       _json['gamerTag'],
                       style: TextStyle(fontSize: 18.0),
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.center,
                     ),
-                    //new Text(_json['player']['name'], style: TextStyle(fontSize: 12.0),),
+                    new Text(_json['player']['name'], style: TextStyle(fontSize: 12.0), textAlign: TextAlign.center,),
                     new Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -66,6 +66,7 @@ class AttendeeCard extends StatelessWidget {
                 new Flexible(
                   child: locationText(),
                 ),
+                new Padding(padding: EdgeInsets.only(right: 36.0),),
                 eventText(),
               ],
             ),
@@ -85,7 +86,7 @@ class AttendeeCard extends StatelessWidget {
       text +='\n';
       text += _json['events'][i]['name'];
     }
-    return new Text(text, style: TextStyle(fontSize: 12.0),);
+    return new Text(text, style: TextStyle(fontSize: 12.0),textAlign: TextAlign.end,);
   }
 
   ///used to display the location of an attendee
@@ -93,19 +94,19 @@ class AttendeeCard extends StatelessWidget {
   ///returns a column with state and us for us players and returns a text of country else
   Widget locationText(){
     if (_json['player']['state'] != null){
-      return new Column(children: <Widget>[
-        new Text(_json['player']['country']),
-        new Text(_json['player']['state'], style: TextStyle(fontSize: 12.0),),
-      ],);
+      return new Center( child: Column(children: <Widget>[
+        new Text(_json['player']['country'], textAlign: TextAlign.center,),
+        new Text(_json['player']['state'], style: TextStyle(fontSize: 12.0), textAlign: TextAlign.center,),
+      ],));
     }
     else if (_json['player']['region'] != null){
-      return new Column(children: <Widget>[
-        new Text(_json['player']['country']),
-        new Text(_json['player']['region'], style: TextStyle(fontSize: 12.0),),
-      ],);
+      return new Center(child: Column(children: <Widget>[
+        new Text(_json['player']['country'],textAlign: TextAlign.center,),
+        new Text(_json['player']['region'], style: TextStyle(fontSize: 12.0), textAlign: TextAlign.center,),
+      ],));
     }
     else if (_json['player']['country'] != null){
-      return new Text(_json['player']['country']);
+      return new Center(child: Text(_json['player']['country'], textAlign: TextAlign.center,));
     }
     return new Text('');
 
