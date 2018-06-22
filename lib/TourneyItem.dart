@@ -93,6 +93,9 @@ class TourneyItem extends StatelessWidget {
   Widget attendeeCount(){
     if (_json['mutations']['cardData'] != null){
       for(var value in _json['mutations']['cardData'].values){
+        if (value['attendeeCount'] == 'null' || value['attendeeCount'] == null){
+          return new Text(" ");
+        }
         return new Text(value['attendeeCount'].toString(), style: TextStyle(color: Colors.red, fontSize: 12.0),);
       }
     }
