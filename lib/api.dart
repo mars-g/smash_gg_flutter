@@ -95,14 +95,14 @@ class Api {
     if (searchTerm != ''){
       name = ',"name":"' + searchTerm + '"';
     }
-    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":$upcoming,"videogameIds":1' + name + featured + regOpen + eventRegOpen + attendeeCount + isLeague + online + offline + '};page=$pageNum;per_page=30');
+    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":$upcoming,"videogameIds":1' + name + featured + regOpen + eventRegOpen + attendeeCount + isLeague + online + offline + '};page=$pageNum;per_page=15');
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['items'] == null) {
       print('Error retrieving tournament.');
       print(uri);
       return null;
     }
-    print(uri);
+    //print(uri);
     if (jsonResponse['items']['entities']['tournament'] is List){
       return jsonResponse['items']['entities']['tournament'];
 

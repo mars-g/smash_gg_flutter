@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd4bffde-6992-49a1-a679-fbcd157dfc21" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart" afterPath="$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart" />
       <change beforePath="$PROJECT_DIR$/lib/api.dart" afterPath="$PROJECT_DIR$/lib/api.dart" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
@@ -24,8 +26,8 @@
       <file leaf-file-name="api.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/api.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="97" column="243" lean-forward="false" selection-start-line="97" selection-start-column="243" selection-end-line="97" selection-end-column="243" />
+            <state relative-caret-position="213">
+              <caret line="104" column="6" lean-forward="false" selection-start-line="104" selection-start-column="6" selection-end-line="104" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -65,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="221" column="37" lean-forward="true" selection-start-line="221" selection-start-column="37" selection-end-line="221" selection-end-column="37" />
+            <state relative-caret-position="60">
+              <caret line="111" column="24" lean-forward="false" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -77,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AttendeesTab.dart" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AttendeesTab.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="33" selection-end-column="3" />
+            <state relative-caret-position="425">
+              <caret line="25" column="23" lean-forward="false" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -159,8 +161,8 @@
       <find>['country</find>
       <find>edgeinsets</find>
       <find>initState</find>
-      <find>print</find>
       <find>for</find>
+      <find>print</find>
       <find>for</find>
     </findStrings>
     <replaceStrings>
@@ -185,11 +187,11 @@
         <option value="$PROJECT_DIR$/pubspec.yaml" />
         <option value="$PROJECT_DIR$/TODO.txt" />
         <option value="$PROJECT_DIR$/lib/TourneyTabs/EventCard.dart" />
-        <option value="$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart" />
         <option value="$PROJECT_DIR$/lib/TourneyItem.dart" />
         <option value="$PROJECT_DIR$/lib/TourneyTabs/AttendeeCard.dart" />
         <option value="$PROJECT_DIR$/lib/api.dart" />
         <option value="$PROJECT_DIR$/lib/main.dart" />
+        <option value="$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart" />
       </list>
     </option>
   </component>
@@ -855,6 +857,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/api.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="104" column="6" lean-forward="false" selection-start-line="104" selection-start-column="6" selection-end-line="104" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="111" column="24" lean-forward="false" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/TourneyTabs/AttendeeCard.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -867,26 +887,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/TourneyTabs/AttendeesTab.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="33" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/api.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="97" column="243" lean-forward="false" selection-start-line="97" selection-start-column="243" selection-end-line="97" selection-end-column="243" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/main.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="221" column="37" lean-forward="true" selection-start-line="221" selection-start-column="37" selection-end-line="221" selection-end-column="37" />
+        <state relative-caret-position="425">
+          <caret line="25" column="23" lean-forward="false" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
