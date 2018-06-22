@@ -19,13 +19,11 @@ class _AttendeesTabState extends State<AttendeesTab> {
 
 
   void incrementPage(){
-    print(pageNum);
     setState(() {
       pageNum += 1;
     });
   }
   void decrementPage(){
-    print(pageNum);
     setState(() {
       if (pageNum > 1){
         pageNum -= 1;

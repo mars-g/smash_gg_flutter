@@ -51,8 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Api _api = Api();
   String searchTerm = "";
   Map filters;
-
   int pageNum = 1;
+  ScrollController _scrollController = new ScrollController();
 
   //Array holds the text for filters and the status of it being checked
   var filterTexts = [
@@ -92,6 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       //Switch the value of the filter
       filterChecks[value] = !filterChecks[value];
+      pageNum = 1;
+      _scrollController.jumpTo(0.0);
     });
   }
 
@@ -100,24 +102,26 @@ class _MyHomePageState extends State<MyHomePage> {
       //convenience change to deselect upcoming when searching
       filterChecks[0] = false;
       searchTerm = searchInput;
+      pageNum = 1;
+      _scrollController.jumpTo(0.0);
     });
   }
 
   void doNil() {}
 
   void incrementPage() {
-    print(pageNum);
     setState(() {
       pageNum += 1;
+      _scrollController.jumpTo(0.0);
     });
   }
 
   void decrementPage() {
-    print(pageNum);
     setState(() {
       if (pageNum > 1) {
         pageNum -= 1;
       }
+      _scrollController.jumpTo(0.0);
     });
   }
 
@@ -174,6 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     return new Expanded(
                         child: ListView.builder(
+                          controller: _scrollController,
                       shrinkWrap: false,
                       scrollDirection: Axis.vertical,
                       itemCount: snapshot.data.length,
