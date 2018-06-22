@@ -52,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String searchTerm = "";
   Map filters;
 
+  int pageNum = 1;
+
   //Array holds the text for filters and the status of it being checked
   var filterTexts = [
     'Upcoming',
@@ -103,6 +105,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void doNil() {}
 
+  void incrementPage() {
+    print(pageNum);
+    setState(() {
+      pageNum += 1;
+    });
+  }
+
+  void decrementPage() {
+    print(pageNum);
+    setState(() {
+      if (pageNum > 1) {
+        pageNum -= 1;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //launchUrl("google.com");
@@ -147,10 +165,11 @@ class _MyHomePageState extends State<MyHomePage> {
               // window in IntelliJ) to see the wireframe for each widget.
               //padding: EdgeInsets.all(1.2),
               child: new FutureBuilder(
-                future: _api.getListOfTourneys(searchTerm, filterChecks),
+                future:
+                    _api.getListOfTourneys(searchTerm, filterChecks, pageNum),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    if(!(snapshot.data is List)){
+                    if (!(snapshot.data is List)) {
                       return new TourneyItem(snapshot.data['tournament']);
                     }
                     return new Expanded(
@@ -170,8 +189,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new FlatButton(
+                      onPressed: decrementPage,
+                      color: Theme.of(context).accentColor,
+                      child: Icon(Icons.keyboard_arrow_left)),
+                  new FlatButton(
+                      onPressed: incrementPage,
+                      color: Theme.of(context).accentColor,
+                      child: Icon(Icons.keyboard_arrow_right))
+                ]),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: new SizedBox(
           width: 50.0,
           height: 50.0,
