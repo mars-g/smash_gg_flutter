@@ -164,30 +164,28 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             new Container(
-              // Invoke "debug paint" (press "p" in the console where you ran
-              // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-              // window in IntelliJ) to see the wireframe for each widget.
-              //padding: EdgeInsets.all(1.2),
               child: new FutureBuilder(
                 future:
                     _api.getListOfTourneys(searchTerm, filterChecks, pageNum),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (!(snapshot.data is List)) {
-                      return new TourneyItem(snapshot.data['tournament']);
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      if (!(snapshot.data is List)) {
+                        return new TourneyItem(snapshot.data['tournament']);
+                      }
+                      return new Expanded(
+                          child: ListView.builder(
+                        controller: _scrollController,
+                        shrinkWrap: false,
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return TourneyItem(snapshot.data[index]);
+                        },
+                      ));
+                    } else {
+                      return new Text("No results found");
                     }
-                    return new Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                      shrinkWrap: false,
-                      scrollDirection: Axis.vertical,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return TourneyItem(snapshot.data[index]);
-                      },
-                    ));
-                  } else if (snapshot.hasError) {
-                    return new Text("No results found");
                   } else {
                     return new CircularProgressIndicator();
                   }

@@ -57,19 +57,21 @@ class _AttendeesTabState extends State<AttendeesTab> {
         new FutureBuilder(
             future: _api.getAttendeesInfo(_json['slug'], pageNum),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return new Expanded(
-                    child: ListView.builder(
-                  shrinkWrap: false,
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return AttendeeCard(snapshot.data[index]);
-                  },
-                ));
-              } else if (snapshot.hasError) {
-                return new Text(
-                    'Error grabbing attendees list.\n Attendees may noit be published by the TO');
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return new Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return AttendeeCard(snapshot.data[index]);
+                        },
+                      ));
+                } else {
+                  return new Text(
+                      'Error grabbing attendees list.\n Attendees may noit be published by the TO');
+                }
               }
               return new CircularProgressIndicator();
             }),
