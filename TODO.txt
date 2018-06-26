@@ -1,15 +1,14 @@
 TODO:
     Main Page
-        Add 'Load more' button
+        Add sidebar
         places to filter options
         Add ability to select other games
 	Add static map to tourney page
 		use https://medium.com/@matthew.smith_66715/maps-in-flutter-a1ac49ab554b for info
 	Attendees tab
 	    Style and make functional the search and filter button
-	    Add loadmore button
 	Event Tab
 	    brackets when event tabs are clicked on
-	    Fine for now, but should be changed eventually
+	        Fine for now, but should be changed eventually
 
 
