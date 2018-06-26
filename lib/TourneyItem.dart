@@ -66,23 +66,6 @@ class TourneyItem extends StatelessWidget {
                 ),
               ),
               attendeeCount(),
-              /*FutureBuilder(
-                future: _api.getAttendeesList(_json['slug']),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return new Transform(transform: new Matrix4.translationValues(5.0, -40.0, 3.0), child: Text(
-                      snapshot.data.length.toString() + ' Players',
-                      textAlign: TextAlign.right,
-                      style: new TextStyle(fontSize: 10.0, color: Colors.red),
-                    ));
-                  } else if (snapshot.hasError) {
-                    return new Text("${snapshot.error}");
-                  } else {
-                    return new Text(" ");
-                  }
-                },
-
-              )*/
             ],
           ),
         ),

@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import '../AttendeePage.dart';
 import 'package:flutter/material.dart';
 
 class AttendeeCard extends StatelessWidget {
@@ -37,7 +37,10 @@ class AttendeeCard extends StatelessWidget {
   build(BuildContext context) {
     return new Card(
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => new AttendeePage(_json)));
+          },
           highlightColor: Theme.of(context).accentColor,
           splashColor: Theme.of(context).accentColor,
           child: Container(
@@ -79,7 +82,6 @@ class AttendeeCard extends StatelessWidget {
     if (_json['events'].length == 0){
       return new Text('');
     }
-    int eventNum = _json['events'].length;
 
     text += _json['events'][0]['name'];
     for (int i = 1; i < _json['events'].length; i++){
@@ -115,7 +117,7 @@ class AttendeeCard extends StatelessWidget {
 
   //Used to add twitter icon if necessary
   Widget getTwitterIcon() {
-    if (_json['player']['twitchStream'] != null) {
+    if (_json['player']['twitterHandle'] != null) {
       return new Image.asset('assets/twitter.icon.png',
           height: 15.0, width: 15.0);
     }
@@ -124,7 +126,7 @@ class AttendeeCard extends StatelessWidget {
 
   //Used to add twitch icon if necessary
   Widget getTwitchIcon() {
-    if (_json['player']['twitterHandle'] != null) {
+    if (_json['player']['twitchStream'] != null) {
       return new Image.asset(
         'assets/twitch.icon.png',
         height: 15.0,
