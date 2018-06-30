@@ -7,9 +7,11 @@ class AttendeePage extends StatelessWidget {
   final Map _json;
   final height = 200.0;
   final width = 200.0;
-  final rng = new Random();
+  final int r;
+  final int g;
+  final int b;
 
-  AttendeePage(this._json);
+  AttendeePage(this._json, this.r, this.g, this.b);
 
   @override
   build(BuildContext context) {
@@ -18,25 +20,22 @@ class AttendeePage extends StatelessWidget {
         title: new Text(_json['gamerTag']),
       ),
       body: new Column(children: <Widget>[
-        new Row(children: <Widget>[
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
           attendeeImage(),
+          new Padding(padding: EdgeInsets.all(8.0),),
           new Flexible(
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text(
                     _json['gamerTag'],
-                    style: TextStyle(fontSize: 26.0),
+                    style: TextStyle(fontSize: 34.0),
                     textAlign: TextAlign.center,
                   ),
-                  new Text(_json['player']['name'], style: TextStyle(fontSize: 13.0), textAlign: TextAlign.center,),
-                  new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      getTwitchIcon(),
-                      getTwitterIcon(),
-                    ],
-                  ),
+                  new Text(_json['player']['name'], style: TextStyle(fontSize: 15.0), textAlign: TextAlign.center,),
+                  twitRow(),
                 ],
               )),
         ],)
@@ -44,6 +43,26 @@ class AttendeePage extends StatelessWidget {
     );
   }
 
+  Widget twitRow(){
+    if ((_json['player']['twitchStream'] != null) && _json['player']['twitterHandle'] != null){
+      return new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          getTwitchIcon(),
+          getTwitterIcon(),
+        ],
+      );
+    }
+    else if (_json['player']['twitterHandle'] != null){
+      print("HERE");
+      return getTwitterIcon();
+    }
+    else if (_json['player']['twitchStream'] != null){
+      return getTwitchIcon();
+    }
+    return new Text(' ');
+
+  }
   Widget attendeeImage(){
     if (_json['player']['images'].length != 0) {
       return new Image.network(
@@ -52,7 +71,19 @@ class AttendeePage extends StatelessWidget {
         width: width,
       );
     }
-    return new Text('');
+
+
+    return new Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Color.fromARGB(255,r,g,b)),
+        child: new Padding(
+            padding: EdgeInsets.only(top: 25.0),
+            child: Text(
+              _json['gamerTag'][0].toUpperCase(),
+              textAlign: TextAlign.center,
+              style: new TextStyle(fontSize: 120.0, color: Colors.white, fontFamily: 'Raleway', ),
+            )));
   }
   //Used to add twitter icon if necessary
   Widget getTwitchIcon() {

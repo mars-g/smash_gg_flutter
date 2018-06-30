@@ -33,7 +33,7 @@ class EventCard extends StatelessWidget {
                   new Flexible(child: Text(
                     _json['name'],
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: TextOverflow.clip,
                     style: new TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

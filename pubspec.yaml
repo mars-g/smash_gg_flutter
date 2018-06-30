@@ -33,6 +33,10 @@ flutter:
     - assets/filter.icon.png
     - assets/twitter.icon.png
     - assets/twitch.icon.png
+  fonts:
+     - family: Raleway
+       fonts:
+        - asset: third_party/Raleway-Regular.ttf
 
 
   # To add assets to your application, add an assets section, like this:
