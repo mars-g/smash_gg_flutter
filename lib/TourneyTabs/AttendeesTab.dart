@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smash_gg/api.dart';
 import 'AttendeeCard.dart';
+import 'dart:math';
 
 class AttendeesTab extends StatefulWidget{
   final Map _json;
@@ -14,6 +15,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
   final _api = new Api();
   final Map _json;
   var pageNum = 1;
+  final rng = new Random();
 
   _AttendeesTabState(this._json);
 
@@ -59,13 +61,15 @@ class _AttendeesTabState extends State<AttendeesTab> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
+                  int x = rng.nextInt(150);
+
                   return new Expanded(
                       child: ListView.builder(
                         shrinkWrap: false,
                         scrollDirection: Axis.vertical,
                         itemCount: snapshot.data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return AttendeeCard(snapshot.data[index]);
+                          return AttendeeCard(snapshot.data[index], x + rng.nextInt(100),x + rng.nextInt(100), x + rng.nextInt(100));
                         },
                       ));
                 } else {

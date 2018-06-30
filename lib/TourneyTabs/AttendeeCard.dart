@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 class AttendeeCard extends StatelessWidget {
   final Map _json;
-  final rng = new Random();
+  final int r;
+  final int g;
+  final int b;
 
   final height = 50.0;
   final width = 50.0;
 
-  AttendeeCard(this._json);
+  AttendeeCard(this._json, this.r, this.b, this.g);
 
   Widget addImage() {
     if (_json['player']['images'].length != 0) {
@@ -19,17 +21,17 @@ class AttendeeCard extends StatelessWidget {
         width: width,
       );
     }
+
     return new Container(
         height: height,
         width: width,
-        color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
-            rng.nextInt(255), rng.nextInt(255)),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Color.fromARGB(255, r, g, b)),
         child: new Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Text(
               _json['gamerTag'][0].toUpperCase(),
               textAlign: TextAlign.center,
-              style: new TextStyle(fontSize: 25.0),
+              style: new TextStyle(fontSize: 25.0, color: Colors.white),
             )));
   }
 
@@ -39,7 +41,7 @@ class AttendeeCard extends StatelessWidget {
       child: InkWell(
           onTap: () {
             Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext context) => new AttendeePage(_json)));
+                builder: (BuildContext context) => new AttendeePage(_json, r,g,b)));
           },
           highlightColor: Theme.of(context).accentColor,
           splashColor: Theme.of(context).accentColor,
@@ -83,12 +85,22 @@ class AttendeeCard extends StatelessWidget {
       return new Text('');
     }
 
-    text += _json['events'][0]['name'];
+    if (_json['events'][0]['name'].length > 20) {
+      text += _json['events'][0]['name'].substring(0, 20);
+    }
+    else {
+      text += _json['events'][0]['name'];
+    }
     for (int i = 1; i < _json['events'].length; i++){
       text +='\n';
-      text += _json['events'][i]['name'];
+      if (_json['events'][i]['name'].length > 20) {
+        text += _json['events'][i]['name'].substring(0, 20);
+      }
+      else {
+        text += _json['events'][i]['name'];
+      }
     }
-    return new Text(text, style: TextStyle(fontSize: 12.0),textAlign: TextAlign.end,);
+    return new Text(text, style: TextStyle(fontSize: 12.0),textAlign: TextAlign.end, overflow: TextOverflow.ellipsis,);
   }
 
   ///used to display the location of an attendee
