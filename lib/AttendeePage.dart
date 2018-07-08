@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,9 +37,26 @@ class AttendeePage extends StatelessWidget {
                   twitRow(),
                 ],
               )),
-        ],)
+        ],),
+        new Padding(padding: EdgeInsets.all(12.0),),
+        new Text("Events Entered", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0),),
+        eventText(),
       ]),
     );
+  }
+
+  Widget eventText(){
+    String text = '';
+    if (_json['events'].length == 0){
+      return new Text('None');
+    }
+    text += _json['events'][0]['name'];
+
+    for (int i = 1; i < _json['events'].length; i++){
+      text +='\n';
+      text += _json['events'][i]['name'];
+    }
+    return new Text(text, style: TextStyle(fontSize: 16.0),textAlign: TextAlign.left, overflow: TextOverflow.ellipsis,);
   }
 
   Widget twitRow(){

@@ -14,7 +14,9 @@ class AttendeesTab extends StatefulWidget{
 class _AttendeesTabState extends State<AttendeesTab> {
   final _api = new Api();
   final Map _json;
-  var pageNum = 1;
+  int pageNum = 1;
+  var filter = {};
+  bool incompleteTeam = false;
   final rng = new Random();
 
   _AttendeesTabState(this._json);
@@ -40,8 +42,19 @@ class _AttendeesTabState extends State<AttendeesTab> {
         new Row(
           children: <Widget>[
             new FlatButton(
-              onPressed: () {},
-              child: Text('Filters'),
+              onPressed: () {
+                setState(() {
+                  if (!incompleteTeam){
+                    filter = {"incompleteTeam" : true};
+                    incompleteTeam = true;
+                  }
+                  else {
+                   incompleteTeam = false;
+                   filter = {};
+                  }
+                });
+              },
+              child: buttonText(),
               color: Colors.blueAccent,
             ),
             new Padding(
@@ -57,7 +70,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
           ],
         ),
         new FutureBuilder(
-            future: _api.getAttendeesInfo(_json['slug'], pageNum),
+            future: _api.getGQLPost("TournamentAttendees",_json['id'].toString(),filter, pageNum.toString()),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
@@ -88,6 +101,16 @@ class _AttendeesTabState extends State<AttendeesTab> {
                   onPressed: incrementPage, color: Theme.of(context).accentColor, child: Icon(Icons.keyboard_arrow_right))
             ]),
       ],
+    );
+  }
+
+  Widget buttonText(){
+    if (incompleteTeam == false){
+      return Text("Open Team");
+    }
+    return Flex(
+    direction: Axis.horizontal,
+    children: <Widget>[Text("Open Team"), new Icon(Icons.check_circle)],
     );
   }
 }
