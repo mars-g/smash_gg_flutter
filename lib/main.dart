@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
+import 'prefs.dart';
 
 void main() => runApp(new MyApp());
 
@@ -88,6 +89,18 @@ class _MyHomePageState extends State<MyHomePage> {
     false
   ];
 
+  @override
+  void initState(){
+    super.initState();
+    Prefs.init();
+  }
+
+  @override
+  void dispose(){
+    Prefs.dispose();
+    super.dispose();
+  }
+
   void _updateFilters(var value) {
     setState(() {
       //Switch the value of the filter
@@ -127,7 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //launchUrl("google.com");
     return new Scaffold(
         appBar: new AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -206,6 +218,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]),
           ],
         ),
+        drawer: Drawer(
+          child: drawerList(),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: new SizedBox(
           width: 50.0,
@@ -233,6 +248,42 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ));
+  }
+  Widget drawerList(){
+    List<Widget> widgets = [];
+    widgets.add(DrawerHeader(
+      child: Center(child: Text("Recently Viewed", style: TextStyle(fontSize: 30.0, fontFamily: 'Raleway'),)),
+      decoration: BoxDecoration(
+          color: Colors.redAccent
+      ),
+    ));
+    var stringList = Prefs.getStringListF('recentTourneys');
+
+
+    Widget futureBuilder = new FutureBuilder(
+      future: stringList,
+      builder: (context, snapshot){
+        if (snapshot.hasData){
+          if(snapshot.data.length == 1 && snapshot.data[0] == "") {
+            return new Container();
+          }
+          List<Widget> myWidgets = [];
+          for (int i = 0; i < snapshot.data.length; i++){
+            Widget tourneyTile = new ListTile(
+                title: Text(snapshot.data[0]),
+                onTap: (){}
+            );
+            myWidgets.add(tourneyTile);
+          }
+          return Column(children: myWidgets);
+        }
+        else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+    widgets.add(futureBuilder);
+    return ListView(children: widgets,);
   }
 
   PopupMenuItem createPopupMenuItem(
