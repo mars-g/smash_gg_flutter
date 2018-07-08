@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: new Column(
           children: <Widget>[
             new TextField(
-              onSubmitted: _search,
+              onChanged: _search,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 fillColor: Colors.grey[150],

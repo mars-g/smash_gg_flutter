@@ -18,6 +18,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
   var filter = {};
   bool incompleteTeam = false;
   final rng = new Random();
+  ScrollController _scrollController = new ScrollController();
 
   _AttendeesTabState(this._json);
 
@@ -25,13 +26,28 @@ class _AttendeesTabState extends State<AttendeesTab> {
   void incrementPage(){
     setState(() {
       pageNum += 1;
+      _scrollController.jumpTo(0.0);
     });
   }
   void decrementPage(){
     setState(() {
       if (pageNum > 1){
         pageNum -= 1;
+        _scrollController.jumpTo(0.0);
       }
+    });
+  }
+  void _search(String searchInput) {
+    setState(() {
+      if (searchInput != ""){
+        filter["search"] = {"searchString" : searchInput , "fieldsToSearch" : ["gamerTag", "playerName"]};
+        print(filter);
+      }
+      else {
+        filter.remove("search");
+      }
+      pageNum = 1;
+      _scrollController.jumpTo(0.0);
     });
   }
 
@@ -44,13 +60,14 @@ class _AttendeesTabState extends State<AttendeesTab> {
             new FlatButton(
               onPressed: () {
                 setState(() {
+                  _scrollController.jumpTo(0.0);
                   if (!incompleteTeam){
-                    filter = {"incompleteTeam" : true};
+                    filter["incompleteTeam"] = true;
                     incompleteTeam = true;
                   }
                   else {
                    incompleteTeam = false;
-                   filter = {};
+                   filter.remove("incompleteTeam");
                   }
                 });
               },
@@ -62,6 +79,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
             ),
             new Flexible(
               child: TextField(
+                onChanged: _search,
                 decoration: InputDecoration(
                     suffixIcon: Icon(Icons.search),
                     hintText: 'Search for a player'),
@@ -78,6 +96,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
 
                   return new Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                         shrinkWrap: false,
                         scrollDirection: Axis.vertical,
                         itemCount: snapshot.data.length,
@@ -87,7 +106,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
                       ));
                 } else {
                   return new Text(
-                      'Error grabbing attendees list.\n Attendees may noit be published by the TO');
+                      'Error grabbing attendees list.\n Attendees may not be published by the TO');
                 }
               }
               return new CircularProgressIndicator();
