@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'TourneyPage.dart';
 import 'package:smash_gg/api.dart';
+import 'prefs.dart';
 
 //Map of months from their integer rep
 Map<int, String> months = {
@@ -33,6 +34,22 @@ class TourneyItem extends StatelessWidget {
     return new Card(
       child: InkWell(
         onTap: () {
+          List<String> recentList = Prefs.getStringList('recentTourneys');
+          if(recentList[0] == ""){
+            recentList[0] = _json['slug'];
+          }
+          else if (recentList.indexOf(_json['slug']) != -1){
+            recentList.remove(_json['slug']);
+            recentList.insert(0,_json['slug']);
+          }
+          else if (recentList.length == 10){
+            recentList.insert(0, _json['slug']);
+            recentList.removeLast();
+          }
+          else {
+            recentList.insert(0, _json['slug']);
+          }
+          Prefs.setStringList('recentTourneys', recentList);
           Navigator.of(context).push(new MaterialPageRoute(
               builder: (BuildContext context) => new TourneyPage(_json)));
         },
