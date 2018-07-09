@@ -269,9 +269,42 @@ class _MyHomePageState extends State<MyHomePage> {
           }
           List<Widget> myWidgets = [];
           for (int i = 0; i < snapshot.data.length; i++){
-            Widget tourneyTile = new ListTile(
-                title: Text(snapshot.data[0]),
-                onTap: (){}
+            Widget tourneyTile = new FutureBuilder(
+              future: _api.getTourneyInfo(snapshot.data[i]),
+              builder: (context, snapshot){
+                if (snapshot.hasData) {
+                  return new ListTile(
+                      leading: findImage(snapshot.data),
+                      title: Text(snapshot.data['name']),
+                      onTap: () {
+                        List<String> recentList = Prefs.getStringList('recentTourneys');
+                        if(recentList[0] == ""){
+                          recentList[0] = snapshot.data['slug'];
+                        }
+                        else if (recentList.indexOf(snapshot.data['slug']) != -1){
+                          recentList.remove(snapshot.data['slug']);
+                          recentList.insert(0,snapshot.data['slug']);
+                        }
+                        else if (recentList.length == 10){
+                          recentList.insert(0, snapshot.data['slug']);
+                          recentList.removeLast();
+                        }
+                        else {
+                          recentList.insert(0, snapshot.data['slug']);
+                        }
+                        Prefs.setStringList('recentTourneys', recentList);
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (BuildContext context) => new TourneyPage(snapshot.data)));
+                      }
+                  );
+                }
+                else if (snapshot.hasError) {
+                  return new Text("ERROR RETRIEVING TOURNEY");
+                }
+                else {
+                  return new Container();
+                }
+              },
             );
             myWidgets.add(tourneyTile);
           }
@@ -302,5 +335,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Text(filterText),
       );
     }
+  }
+  Image findImage(Map json) {
+    List images = json['images'];
+    if (images == null || images.length == 0) {
+      return new Image.asset(
+        "assets/cup.icon.png",
+        height: 80.0,
+        width: 80.0,
+      );
+    }
+    for (Map image in images) {
+      if (image['type'] == 'profile') {
+        return Image.network(
+          image['url'],
+          height: 80.0,
+          width: 80.0,
+        );
+      }
+    }
+    return Image.network(images[0]['url'], height: 80.0, width: 80.0);
   }
 }
