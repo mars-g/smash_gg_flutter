@@ -1,12 +1,26 @@
 TODO:
     Main Page
-        Add sidebar
         places to filter options
-        Add ability to select other games
 	Add static map to tourney page
 		use https://medium.com/@matthew.smith_66715/maps-in-flutter-a1ac49ab554b for info
 	Event Tab
 	    brackets when event tabs are clicked on
 	        Fine for now, but should be changed eventually
+
+
+
+
+
+
+
+Videogame ids codes:
+All Games = ""
+melee = 1
+sm4sh = 3
+sfv = 7
+rocket league = 14
+super smash bros = 4
+killer instinct = 19
+dbfz = 287
 
 

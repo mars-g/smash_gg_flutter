@@ -54,6 +54,29 @@ class _MyHomePageState extends State<MyHomePage> {
   Map filters;
   int pageNum = 1;
   ScrollController _scrollController = new ScrollController();
+  var currentGameID = "";
+
+  var gamesTexts = [
+    'All Games',
+    'Melee',
+    'Smash 4',
+    'Street Fighter V',
+    'Rocket League',
+    'Super Smash Bros',
+    'Killer Instinct',
+    'DragonBall FighterZ'
+  ];
+
+  var gameChecks = [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
 
   //Array holds the text for filters and the status of it being checked
   var filterTexts = [
@@ -70,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'City',
     'League/Circuit',
     'Online',
-    'Offline',
+    'Offline'
   ];
   var filterChecks = [
     true,
@@ -86,23 +109,24 @@ class _MyHomePageState extends State<MyHomePage> {
     false,
     false,
     false,
-    false
+    false,
   ];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     Prefs.init();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     Prefs.dispose();
     super.dispose();
   }
 
   void _updateFilters(var value) {
     setState(() {
+      //check if value is the games value
       //Switch the value of the filter
       filterChecks[value] = !filterChecks[value];
       pageNum = 1;
@@ -138,6 +162,53 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _updateGames(var value){
+    setState((){
+      if (gameChecks[value]){
+        gameChecks[value] = false;
+        gameChecks[0] = true;
+        currentGameID = "";
+        return;
+      }
+      for (int i = 0; i < gameChecks.length; i++){
+        gameChecks[i] = false;
+      }
+      gameChecks[value] = true;
+      //all games
+      if (value == 0){
+        currentGameID = "";
+      }
+      //melee
+      else if (value == 1){
+        currentGameID = "1";
+      }
+      //sm4sh
+      else if (value == 2){
+        currentGameID = "3";
+      }
+      //sfv
+      else if (value == 3){
+        currentGameID = "7";
+      }
+      //rocket league
+      else if (value == 4){
+        currentGameID = "14";
+      }
+      //super smash bros
+      else if (value == 5){
+        currentGameID = "4";
+      }
+      //killer instinct
+      else if (value == 6){
+        currentGameID = "19";
+      }
+      //dbfz
+      else if (value == 7){
+        currentGameID = "287";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -165,20 +236,36 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: new Column(
           children: <Widget>[
-            new TextField(
-              onChanged: _search,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                fillColor: Colors.grey[150],
-                filled: true,
-                hintText: "Search for a tourney",
-                prefixIcon: Icon(Icons.search),
+            Row(children: <Widget>[
+              PopupMenuButton(
+                itemBuilder: (BuildContext context) {
+                  var itemList = new List<PopupMenuItem>();
+                  for (int j = 0; j < gamesTexts.length; j++) {
+                    itemList.add(CheckedPopupMenuItem(
+                      value: j,
+                      checked: gameChecks[j],
+                      child: Text(gamesTexts[j]),
+                    ));
+                  }
+                  return itemList;
+                },
+                onSelected: _updateGames,
               ),
-            ),
+              Expanded(child: TextField(
+                onChanged: _search,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  fillColor: Colors.grey[150],
+                  filled: true,
+                  hintText: "Search for a tourney",
+                  prefixIcon: Icon(Icons.search),
+                ),
+              ))
+            ]),
             new Container(
               child: new FutureBuilder(
                 future:
-                    _api.getListOfTourneys(searchTerm, filterChecks, pageNum),
+                    _api.getListOfTourneys(searchTerm, filterChecks, currentGameID, pageNum),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
@@ -249,59 +336,58 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ));
   }
-  Widget drawerList(){
+
+  Widget drawerList() {
     List<Widget> widgets = [];
     widgets.add(DrawerHeader(
-      child: Center(child: Text("Recently Viewed", style: TextStyle(fontSize: 30.0, fontFamily: 'Raleway'),)),
-      decoration: BoxDecoration(
-          color: Colors.redAccent
-      ),
+      child: Center(
+          child: Text(
+        "Recently Viewed",
+        style: TextStyle(fontSize: 30.0, fontFamily: 'Raleway'),
+      )),
+      decoration: BoxDecoration(color: Colors.redAccent),
     ));
     var stringList = Prefs.getStringListF('recentTourneys');
 
-
     Widget futureBuilder = new FutureBuilder(
       future: stringList,
-      builder: (context, snapshot){
-        if (snapshot.hasData){
-          if(snapshot.data.length == 1 && snapshot.data[0] == "") {
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.length == 1 && snapshot.data[0] == "") {
             return new Container();
           }
           List<Widget> myWidgets = [];
-          for (int i = 0; i < snapshot.data.length; i++){
+          for (int i = 0; i < snapshot.data.length; i++) {
             Widget tourneyTile = new FutureBuilder(
               future: _api.getTourneyInfo(snapshot.data[i]),
-              builder: (context, snapshot){
+              builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return new ListTile(
                       leading: findImage(snapshot.data),
                       title: Text(snapshot.data['name']),
                       onTap: () {
-                        List<String> recentList = Prefs.getStringList('recentTourneys');
-                        if(recentList[0] == ""){
+                        List<String> recentList =
+                            Prefs.getStringList('recentTourneys');
+                        if (recentList[0] == "") {
                           recentList[0] = snapshot.data['slug'];
-                        }
-                        else if (recentList.indexOf(snapshot.data['slug']) != -1){
+                        } else if (recentList.indexOf(snapshot.data['slug']) !=
+                            -1) {
                           recentList.remove(snapshot.data['slug']);
-                          recentList.insert(0,snapshot.data['slug']);
-                        }
-                        else if (recentList.length == 10){
+                          recentList.insert(0, snapshot.data['slug']);
+                        } else if (recentList.length == 10) {
                           recentList.insert(0, snapshot.data['slug']);
                           recentList.removeLast();
-                        }
-                        else {
+                        } else {
                           recentList.insert(0, snapshot.data['slug']);
                         }
                         Prefs.setStringList('recentTourneys', recentList);
                         Navigator.of(context).push(new MaterialPageRoute(
-                            builder: (BuildContext context) => new TourneyPage(snapshot.data)));
-                      }
-                  );
-                }
-                else if (snapshot.hasError) {
+                            builder: (BuildContext context) =>
+                                new TourneyPage(snapshot.data)));
+                      });
+                } else if (snapshot.hasError) {
                   return new Text("ERROR RETRIEVING TOURNEY");
-                }
-                else {
+                } else {
                   return new Container();
                 }
               },
@@ -309,14 +395,15 @@ class _MyHomePageState extends State<MyHomePage> {
             myWidgets.add(tourneyTile);
           }
           return Column(children: myWidgets);
-        }
-        else {
+        } else {
           return CircularProgressIndicator();
         }
       },
     );
     widgets.add(futureBuilder);
-    return ListView(children: widgets,);
+    return ListView(
+      children: widgets,
+    );
   }
 
   PopupMenuItem createPopupMenuItem(
@@ -336,6 +423,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
   }
+
   Image findImage(Map json) {
     List images = json['images'];
     if (images == null || images.length == 0) {
