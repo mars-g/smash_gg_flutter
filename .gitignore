@@ -5,5 +5,5 @@
 .pub/
 
 build/
-
+assets/config.json
 .flutter-plugins
