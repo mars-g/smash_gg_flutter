@@ -1,8 +1,7 @@
 TODO:
     Main Page
         places to filter options
-	Add static map to tourney page
-		use https://medium.com/@matthew.smith_66715/maps-in-flutter-a1ac49ab554b for info
+        Create stateful dialog to update country dialog state
 	Event Tab
 	    brackets when event tabs are clicked on
 	        Fine for now, but should be changed eventually
