@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:smash_gg/api.dart';
+import 'dart:async';
+import 'package:map_view/map_view.dart' as map_view;
+import 'package:google_maps_webservice/places.dart' as places;
+
+//put your api key here
+final apiKey = "";
 
 Map<int, String> months = {
   1: 'January',
@@ -22,10 +28,96 @@ class HomeTab extends StatelessWidget {
   final Map _json;
 
   HomeTab(this._json);
+
+  ///Assists in places lookups
+  ///
+  /// type should be as follows
+  ///   placeId
+  ///   address
+  ///   name
+  Future placesLookupHelper(String type) async{
+    var placesApi = new places.GoogleMapsPlaces(apiKey);
+    if (type == "placeId") {
+      places.PlacesDetailsResponse placesResponse = await placesApi
+          .getDetailsByPlaceId(_json['mapsPlaceId']);
+      return placesResponse.result.geometry.location;
+    }
+    else if (type == "address"){
+      places.PlacesSearchResponse placesResponse = await placesApi
+          .searchByText(_json['venueAddress']);
+      return placesResponse.results[0].geometry.location;
+    }
+    else {
+      places.PlacesSearchResponse placesResponse = await placesApi
+          .searchByText(_json['venueName']);
+      return placesResponse.results[0].geometry.location;
+    }
+  }
+
+  ///Map initialization and creation logic
+  ///
+  /// If the event is an online event, there is no map
+  /// For offline events, lat/lng should be prioritized, then google places id
+  /// Then google places venue search
+  Widget staticMapWidget() {
+    if (_json['hasOnlineEvents'] == "true"){
+      return Text("This is an online event");
+    }
+    else if (_json['lat'] != null && _json['lng'] != null){
+      var provider = new map_view.StaticMapProvider(apiKey);
+      var markers = [new map_view.Marker("1",_json['venueAddress'],_json['lat'],_json['lng'])];
+      final staticUri = provider.getStaticUriWithMarkers(markers,width: 900, height: 400, maptype: map_view.StaticMapViewType.roadmap, center: map_view.Location(_json['lat'],_json['lng']),);
+      return new Image.network(staticUri.toString());
+    }
+    else if (_json['mapsPlaceId'] != "null"){
+      return new FutureBuilder(
+        future: placesLookupHelper("placeId"),
+        builder: (context, snapshot){
+          if (snapshot.hasData){
+            var provider = new map_view.StaticMapProvider(apiKey);
+            var markers = [new map_view.Marker("1",_json['venueAddress'],snapshot.data.lat,snapshot.data.lng)];
+            final staticUri = provider.getStaticUriWithMarkers(markers,width: 900, height: 400, maptype: map_view.StaticMapViewType.roadmap, center: map_view.Location(snapshot.data.lat,snapshot.data.lng),);
+            return new Image.network(staticUri.toString());
+          }
+          else if (snapshot.hasError){
+            print(snapshot.error);
+            return new Container();
+          }
+          else {
+            return new Container();
+          }
+        },
+      );
+    }
+    else if (_json['venueAddress'] != "null"){
+      return new FutureBuilder(
+        future: placesLookupHelper("address"),
+        builder: (context, snapshot){
+          if (snapshot.hasData){
+            var provider = new map_view.StaticMapProvider(apiKey);
+            var markers = [new map_view.Marker("1",_json['venueAddress'],snapshot.data.lat,snapshot.data.lng)];
+            final staticUri = provider.getStaticUriWithMarkers(markers,width: 900, height: 400, maptype: map_view.StaticMapViewType.roadmap, center: map_view.Location(snapshot.data.lat,snapshot.data.lng),);
+            return new Image.network(staticUri.toString());
+          }
+          else if (snapshot.hasError){
+            print(snapshot.error);
+            return new Container();
+          }
+          else {
+            return new Container();
+          }
+        },
+      );
+    }
+    return new Container();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final Api _api = new Api();
     bool hasBanner = false;
+
     int bannerNum;
     for (int i = 0; i < _json['images'].length; i++) {
       if (_json['images'][i]['type'] == 'banner') {
@@ -86,6 +178,8 @@ class HomeTab extends StatelessWidget {
         ),
         locationText(context),
         locationWidget(),
+        //mapview goes here
+        staticMapWidget(),
         gettingThereText(),
         new Text(
           "Additional Information",

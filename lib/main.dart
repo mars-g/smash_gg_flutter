@@ -3,8 +3,15 @@ import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
 import 'prefs.dart';
+import 'package:map_view/map_view.dart';
 
-void main() => runApp(new MyApp());
+//put your api key here
+final apiKey = "";
+
+void main() {
+  MapView.setApiKey(apiKey);
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -54,8 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Map filters;
   int pageNum = 1;
   ScrollController _scrollController = new ScrollController();
-  var currentGameID = "";
+  var currentGameID = '""';
+  var countryCode = '';
+  var addrState = 'null';
+  var _selection;
 
+  //this variable will be updated depending on whether usa or canada is chosen
+  List<String> regions = [""];
+
+  //list of all games
   var gamesTexts = [
     'All Games',
     'Melee',
@@ -67,16 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
     'DragonBall FighterZ'
   ];
 
-  var gameChecks = [
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  //bools to keep track of which games are selected
+  var gameChecks = [true, false, false, false, false, false, false, false];
 
   //Array holds the text for filters and the status of it being checked
   var filterTexts = [
@@ -124,10 +130,85 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void _updateFilters(var value) {
+  void _updateCountry(var value) {
     setState(() {
-      //check if value is the games value
+      countryCode = countryCodes[value];
+      _selection = value;
+      //value is the us
+      if (value == 0) {
+        regions = stateList;
+      }
+      else if (value == 1){
+        regions = provinceList;
+      }
+      else {
+        Navigator.of(context).pop();
+      }
+    });
+    return;
+  }
+
+  void _updateRegion(var value) {
+    if (value != "") {
+      setState(() {
+        addrState = value;
+      });
+    }
+    return;
+  }
+
+  void _updateFilters(var value) {
+    if (value == 9 && filterChecks[value] == false) {
+      regions = [""];
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => new AlertDialog(
+                title: new Text("Select Location"),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    //country button
+                    ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton(
+                          value: _selection,
+                          hint: new Text("Country"),
+                          items: countryNames.map((String value) {
+                            return new DropdownMenuItem(
+                              value: countryNames.lastIndexOf(value),
+                              child: SizedBox(width: 200.0, child: Text(value)),
+                            );
+                          }).toList(),
+                          onChanged: _updateCountry,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton(
+                          hint: new Text("State/Province"),
+                          items: regions.map((String value) {
+                            return new DropdownMenuItem(
+                              value: countryNames.lastIndexOf(value),
+                              child: SizedBox(width: 200.0, child: Text(value)),
+                            );
+                          }).toList(),
+                          onChanged: _updateRegion,
+                        )),
+                  ],
+                ),
+              ));
+    }
+    setState(() {
+      //check if value is the location value
       //Switch the value of the filter
+      if (value == 9 && filterChecks[9] == true) {
+        countryCode = '';
+        addrState = 'null';
+      }
       filterChecks[value] = !filterChecks[value];
       pageNum = 1;
       _scrollController.jumpTo(0.0);
@@ -162,48 +243,48 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _updateGames(var value){
-    setState((){
-      if (gameChecks[value]){
+  void _updateGames(var value) {
+    setState(() {
+      if (gameChecks[value]) {
         gameChecks[value] = false;
         gameChecks[0] = true;
-        currentGameID = "";
+        currentGameID = '""';
         return;
       }
-      for (int i = 0; i < gameChecks.length; i++){
+      for (int i = 0; i < gameChecks.length; i++) {
         gameChecks[i] = false;
       }
       gameChecks[value] = true;
       //all games
-      if (value == 0){
-        currentGameID = "";
+      if (value == 0) {
+        currentGameID = '""';
       }
       //melee
-      else if (value == 1){
+      else if (value == 1) {
         currentGameID = "1";
       }
       //sm4sh
-      else if (value == 2){
+      else if (value == 2) {
         currentGameID = "3";
       }
       //sfv
-      else if (value == 3){
+      else if (value == 3) {
         currentGameID = "7";
       }
       //rocket league
-      else if (value == 4){
+      else if (value == 4) {
         currentGameID = "14";
       }
       //super smash bros
-      else if (value == 5){
+      else if (value == 5) {
         currentGameID = "4";
       }
       //killer instinct
-      else if (value == 6){
+      else if (value == 6) {
         currentGameID = "19";
       }
       //dbfz
-      else if (value == 7){
+      else if (value == 7) {
         currentGameID = "287";
       }
     });
@@ -251,7 +332,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 onSelected: _updateGames,
               ),
-              Expanded(child: TextField(
+              Expanded(
+                  child: TextField(
                 onChanged: _search,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -264,8 +346,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ]),
             new Container(
               child: new FutureBuilder(
-                future:
-                    _api.getListOfTourneys(searchTerm, filterChecks, currentGameID, pageNum),
+                future: _api.getListOfTourneys(searchTerm, filterChecks,
+                    currentGameID, countryCode, addrState, pageNum),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
@@ -445,3 +527,574 @@ class _MyHomePageState extends State<MyHomePage> {
     return Image.network(images[0]['url'], height: 80.0, width: 80.0);
   }
 }
+
+//list of all country names
+final countryNames = [
+  "United States of America",
+  "Canada",
+  "Afghanistan",
+  "Aland Islands",
+  "Albania",
+  "Algeria",
+  "American Samoa",
+  "Andorra",
+  "Angola",
+  "Anguilla",
+  "Antarctica",
+  "Antigua and Barbuda",
+  "Argentina",
+  "Armenia",
+  "Aruba",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belarus",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bermuda",
+  "Bhutan",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Bouvet Island",
+  "Brazil",
+  "British Virgin Islands",
+  "British Indian Ocean Territory",
+  "Brunei Darussalam",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodia",
+  "Cameroon",
+  "Cape Verde",
+  "Cayman Islands",
+  "Central African Republic",
+  "Chad",
+  "Chile",
+  "China",
+  "Hong Kong, SAR China",
+  "Macao, SAR China",
+  "Christmas Island",
+  "Cocos (Keeling) Islands",
+  "Colombia",
+  "Comoros",
+  "Congo (Brazzaville)",
+  "Congo (Kinshasa)",
+  "Cook Islands",
+  "Costa Rica",
+  "CÃ´te d'Ivoire",
+  "Croatia",
+  "Cuba",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Dominican Republic",
+  "Ecuador",
+  "Egypt",
+  "El Salvador",
+  "Equatorial Guinea",
+  "Eritrea",
+  "Estonia",
+  "Ethiopia",
+  "Falkland Islands (Malvinas)",
+  "Faroe Islands",
+  "Fiji",
+  "Finland",
+  "France",
+  "French Guiana",
+  "French Polynesia",
+  "French Southern Territories",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Germany",
+  "Ghana",
+  "Gibraltar",
+  "Greece",
+  "Greenland",
+  "Grenada",
+  "Guadeloupe",
+  "Guam",
+  "Guatemala",
+  "Guernsey",
+  "Guinea",
+  "Guinea-Bissau",
+  "Guyana",
+  "Haiti",
+  "Heard and Mcdonald Islands",
+  "Holy See (Vatican City State)",
+  "Honduras",
+  "Hungary",
+  "Iceland",
+  "India",
+  "Indonesia",
+  "Iran",
+  "Islamic Republic of Iraq",
+  "Ireland",
+  "Isle of Man",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jersey",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kiribati",
+  "Korea (North)",
+  "Korea (South)",
+  "Kuwait",
+  "Kyrgyzstan",
+  "Lao PDR",
+  "Latvia",
+  "Lebanon",
+  "Lesotho",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Macedonia, Republic of",
+  "Madagascar",
+  "Malawi",
+  "Malaysia",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Marshall Islands",
+  "Martinique",
+  "Mauritania",
+  "Mauritius",
+  "Mayotte",
+  "Mexico",
+  "Micronesia, Federated States of",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Montserrat",
+  "Morocco",
+  "Mozambique",
+  "Myanmar",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "Netherlands Antilles",
+  "New Caledonia",
+  "New Zealand",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "Niue",
+  "Norfolk Island",
+  "Northern Mariana Islands",
+  "Norway",
+  "Oman",
+  "Pakistan",
+  "Palau",
+  "Palestinian Territory",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Pitcairn",
+  "Poland",
+  "Portugal",
+  "Puerto Rico",
+  "Qatar",
+  "RÃ©union",
+  "Romania",
+  "Russian Federation",
+  "Rwanda",
+  "Saint-BarthÃ©lemy",
+  "Saint Helena",
+  "Saint Kitts and Nevis",
+  "Saint Lucia",
+  "Saint-Martin (French part)",
+  "Saint Pierre and Miquelon",
+  "Saint Vincent and Grenadines",
+  "Samoa",
+  "San Marino",
+  "Sao Tome and Principe",
+  "Saudi Arabia",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Solomon Islands",
+  "Somalia",
+  "South Africa",
+  "South Georgia and the South Sandwich Islands",
+  "South Sudan",
+  "Spain",
+  "Sri Lanka",
+  "Sudan",
+  "Suriname",
+  "Svalbard and Jan Mayen Islands",
+  "Swaziland",
+  "Sweden",
+  "Switzerland",
+  "Syrian Arab Republic (Syria)",
+  "Taiwan, Republic of China",
+  "Tajikistan",
+  "Tanzania, United Republic of",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tokelau",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkey",
+  "Turkmenistan",
+  "Turks and Caicos Islands",
+  "Tuvalu",
+  "Uganda",
+  "Ukraine",
+  "United Arab Emirates",
+  "United Kingdom",
+  "US Minor Outlying Islands",
+  "Uruguay",
+  "Uzbekistan",
+  "Vanuatu",
+  "Venezuela (Bolivarian Republic)",
+  "Viet Nam",
+  "Virgin Islands, US",
+  "Wallis and Futuna Islands",
+  "Western Sahara",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe"
+];
+
+//corresponding codes for countries
+final countryCodes = [
+  "US",
+  "CA",
+  "AF",
+  "AX",
+  "AL",
+  "DZ",
+  "AS",
+  "AD",
+  "AO",
+  "AI",
+  "AQ",
+  "AG",
+  "AR",
+  "AM",
+  "AW",
+  "AU",
+  "AT",
+  "AZ",
+  "BS",
+  "BH",
+  "BD",
+  "BB",
+  "BY",
+  "BE",
+  "BZ",
+  "BJ",
+  "BM",
+  "BT",
+  "BO",
+  "BA",
+  "BW",
+  "BV",
+  "BR",
+  "VG",
+  "IO",
+  "BN",
+  "BG",
+  "BF",
+  "BI",
+  "KH",
+  "CM",
+  "CV",
+  "KY",
+  "CF",
+  "TD",
+  "CL",
+  "CN",
+  "HK",
+  "MO",
+  "CX",
+  "CC",
+  "CO",
+  "KM",
+  "CG",
+  "CD",
+  "CK",
+  "CR",
+  "CI",
+  "HR",
+  "CU",
+  "CY",
+  "CZ",
+  "DK",
+  "DJ",
+  "DM",
+  "DO",
+  "EC",
+  "EG",
+  "SV",
+  "GQ",
+  "ER",
+  "EE",
+  "ET",
+  "FK",
+  "FO",
+  "FJ",
+  "FI",
+  "FR",
+  "GF",
+  "PF",
+  "TF",
+  "GA",
+  "GM",
+  "GE",
+  "DE",
+  "GH",
+  "GI",
+  "GR",
+  "GL",
+  "GD",
+  "GP",
+  "GU",
+  "GT",
+  "GG",
+  "GN",
+  "GW",
+  "GY",
+  "HT",
+  "HM",
+  "VA",
+  "HN",
+  "HU",
+  "IS",
+  "IN",
+  "ID",
+  "IR",
+  "IQ",
+  "IE",
+  "IM",
+  "IL",
+  "IT",
+  "JM",
+  "JP",
+  "JE",
+  "JO",
+  "KZ",
+  "KE",
+  "KI",
+  "KP",
+  "KR",
+  "KW",
+  "KG",
+  "LA",
+  "LV",
+  "LB",
+  "LS",
+  "LR",
+  "LY",
+  "LI",
+  "LT",
+  "LU",
+  "MK",
+  "MG",
+  "MW",
+  "MY",
+  "MV",
+  "ML",
+  "MT",
+  "MH",
+  "MQ",
+  "MR",
+  "MU",
+  "YT",
+  "MX",
+  "FM",
+  "MD",
+  "MC",
+  "MN",
+  "ME",
+  "MS",
+  "MA",
+  "MZ",
+  "MM",
+  "NA",
+  "NR",
+  "NP",
+  "NL",
+  "AN",
+  "NC",
+  "NZ",
+  "NI",
+  "NE",
+  "NG",
+  "NU",
+  "NF",
+  "MP",
+  "NO",
+  "OM",
+  "PK",
+  "PW",
+  "PS",
+  "PA",
+  "PG",
+  "PY",
+  "PE",
+  "PH",
+  "PN",
+  "PL",
+  "PT",
+  "PR",
+  "QA",
+  "RE",
+  "RO",
+  "RU",
+  "RW",
+  "BL",
+  "SH",
+  "KN",
+  "LC",
+  "MF",
+  "PM",
+  "VC",
+  "WS",
+  "SM",
+  "ST",
+  "SA",
+  "SN",
+  "RS",
+  "SC",
+  "SL",
+  "SG",
+  "SK",
+  "SI",
+  "SB",
+  "SO",
+  "ZA",
+  "GS",
+  "SS",
+  "ES",
+  "LK",
+  "SD",
+  "SR",
+  "SJ",
+  "SZ",
+  "SE",
+  "CH",
+  "SY",
+  "TW",
+  "TJ",
+  "TZ",
+  "TH",
+  "TL",
+  "TG",
+  "TK",
+  "TO",
+  "TT",
+  "TN",
+  "TR",
+  "TM",
+  "TC",
+  "TV",
+  "UG",
+  "UA",
+  "AE",
+  "GB",
+  "UM",
+  "UY",
+  "UZ",
+  "VU",
+  "VE",
+  "VN",
+  "VI",
+  "WF",
+  "EH",
+  "YE",
+  "ZM",
+  "ZW"
+];
+
+final stateList = [
+  "AL",
+  "AK",
+  "AZ",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DE",
+  "FL",
+  "GA",
+  "HI",
+  "ID",
+  "IL",
+  "IN",
+  "IA",
+  "KS",
+  "KY",
+  "LA",
+  "ME",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MS",
+  "MO",
+  "MT",
+  "NE",
+  "NV",
+  "NH",
+  "NJ",
+  "NM",
+  "NY",
+  "NC",
+  "ND",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VT",
+  "VA",
+  "WA",
+  "WV",
+  "WI",
+  "WY"
+];
+
+final provinceList = [
+  "AB",
+  "BC",
+  "LB",
+  "MB",
+  "NB",
+  "NL",
+  "NS",
+  "NU",
+  "ON",
+  "PE",
+  "QC",
+  "SK",
+  "YU"
+];
