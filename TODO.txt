@@ -5,6 +5,8 @@ TODO:
 	Event Tab
 	    brackets when event tabs are clicked on
 	        Fine for now, but should be changed eventually
+	AttendeePage
+	    Show recent tourney placings
 
 
 
