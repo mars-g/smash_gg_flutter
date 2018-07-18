@@ -38,6 +38,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+_MyHomePageState _myHomePageState = new _MyHomePageState();
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -52,7 +54,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _myHomePageState;
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       showDialog(
           context: context,
-          builder: (BuildContext context) => new AlertDialog(
+          builder: (BuildContext context) => new StatefulDialog(
                 title: new Text("Select Location"),
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -526,6 +528,99 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return Image.network(images[0]['url'], height: 80.0, width: 80.0);
   }
+}
+
+class StatefulDialog extends StatefulWidget {
+  final Widget title;
+  final Widget content;
+  StatefulDialog({this.title: const Text(""), this.content: const Text(""),});
+
+  @override
+  _StatefulDialogState createState() => new _StatefulDialogState(title: this.title, content: this.content);
+}
+
+
+//Stateful Dialog for updating alert dialog
+class _StatefulDialogState extends State<StatefulDialog>{
+  final Widget title;
+  final Widget content;
+  var _selection;
+  List<String> regions = [""];
+
+  _StatefulDialogState({this.title: const Text(""), this.content: const Text("")});
+
+  void _updateCountry(var value) {
+    _myHomePageState.setState(() {
+      _myHomePageState.countryCode = countryCodes[value];
+      //value is the us
+    });
+    setState(() {
+      _selection = value;
+      if (value == 0) {
+        regions = stateList;
+      }
+      else if (value == 1){
+        regions = provinceList;
+      }
+      else {
+        Navigator.of(context).pop();
+      }
+    });
+    return;
+  }
+
+  void _updateRegion(var value) {
+    if (value != "") {
+      _myHomePageState.setState(() {
+        _myHomePageState.addrState = value;
+        Navigator.of(context).pop();
+      });
+    }
+    return;
+  }
+
+  @override
+  Widget build(BuildContext content){
+    return new AlertDialog(
+        title: this.title,
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            //country button
+            ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton(
+                  value: _selection,
+                  hint: new Text("Country"),
+                  items: countryNames.map((String value) {
+                    return new DropdownMenuItem(
+                      value: countryNames.lastIndexOf(value),
+                      child: SizedBox(width: 200.0, child: Text(value)),
+                    );
+                  }).toList(),
+                  onChanged: _updateCountry,
+                )),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+            ),
+            ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton(
+                  hint: new Text("State/Province"),
+                  items: regions.map((String value) {
+                    return new DropdownMenuItem(
+                      value: value,
+                      child: SizedBox(width: 200.0, child: Text(value)),
+                    );
+                  }).toList(),
+                  onChanged: _updateRegion,
+                )),
+          ],
+        ),
+    );
+  }
+
 }
 
 //list of all country names
