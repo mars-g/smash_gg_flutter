@@ -167,41 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
           context: context,
           builder: (BuildContext context) => new StatefulDialog(
                 title: new Text("Select Location"),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    //country button
-                    ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          value: _selection,
-                          hint: new Text("Country"),
-                          items: countryNames.map((String value) {
-                            return new DropdownMenuItem(
-                              value: countryNames.lastIndexOf(value),
-                              child: SizedBox(width: 200.0, child: Text(value)),
-                            );
-                          }).toList(),
-                          onChanged: _updateCountry,
-                        )),
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                    ),
-                    ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          hint: new Text("State/Province"),
-                          items: regions.map((String value) {
-                            return new DropdownMenuItem(
-                              value: countryNames.lastIndexOf(value),
-                              child: SizedBox(width: 200.0, child: Text(value)),
-                            );
-                          }).toList(),
-                          onChanged: _updateRegion,
-                        )),
-                  ],
-                ),
               ));
     }
     setState(() {
@@ -596,7 +561,7 @@ class _StatefulDialogState extends State<StatefulDialog>{
                   items: countryNames.map((String value) {
                     return new DropdownMenuItem(
                       value: countryNames.lastIndexOf(value),
-                      child: SizedBox(width: 200.0, child: Text(value)),
+                      child: SizedBox(width: 150.0, child: Text(value)),
                     );
                   }).toList(),
                   onChanged: _updateCountry,
@@ -611,7 +576,7 @@ class _StatefulDialogState extends State<StatefulDialog>{
                   items: regions.map((String value) {
                     return new DropdownMenuItem(
                       value: value,
-                      child: SizedBox(width: 200.0, child: Text(value)),
+                      child: SizedBox(width: 150.0, child: Text(value)),
                     );
                   }).toList(),
                   onChanged: _updateRegion,

@@ -1,13 +1,11 @@
 TODO:
     Main Page
         places to filter options
-        Create stateful dialog to update country dialog state
 	Event Tab
 	    brackets when event tabs are clicked on
 	        Fine for now, but should be changed eventually
 	AttendeePage
 	    Show recent tourney placings
-
 
 
 
