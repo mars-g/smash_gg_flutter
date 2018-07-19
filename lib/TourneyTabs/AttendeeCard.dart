@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../AttendeePage.dart';
 import 'package:flutter/material.dart';
 
@@ -53,12 +52,11 @@ class AttendeeCard extends StatelessWidget {
                 new Flexible(
                     child: new Column(
                   children: <Widget>[
-                    new Text(
+                        (_json['gamerTag'] != null)? new Text(
                       _json['gamerTag'],
                       style: TextStyle(fontSize: 18.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    new Text(_json['player']['name'], style: TextStyle(fontSize: 12.0), textAlign: TextAlign.center,),
+                      textAlign: TextAlign.center) : new Container(),
+                        (_json['player'] != null && _json['player']['name'] != null) ? new Text(_json['player']['name'], style: TextStyle(fontSize: 12.0), textAlign: TextAlign.center,) : new Container(),
                     new Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

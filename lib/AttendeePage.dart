@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AttendeePage extends StatelessWidget {
   final Map _json;
-  final height = 200.0;
-  final width = 200.0;
+  final height = 150.0;
+  final width = 150.0;
   final int r;
   final int g;
   final int b;
@@ -16,7 +16,7 @@ class AttendeePage extends StatelessWidget {
   build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(_json['gamerTag']),
+        title: (_json['gamerTag'] != null) ? new Text(_json['gamerTag']) : new Text(""),
       ),
       body: new Column(children: <Widget>[
         new Row(
@@ -29,17 +29,17 @@ class AttendeePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text(
-                    _json['gamerTag'],
-                    style: TextStyle(fontSize: 34.0),
+                    (_json['gamerTag'] != null) ? _json['gamerTag'] : "",
+                    style: TextStyle(fontSize: 30.0),
                     textAlign: TextAlign.center,
                   ),
-                  new Text(_json['player']['name'], style: TextStyle(fontSize: 15.0), textAlign: TextAlign.center,),
+                  new Text((_json['player']['name'] != null)?_json['player']['name'] : "", style: TextStyle(fontSize: 15.0), textAlign: TextAlign.center,),
                   twitRow(),
                 ],
               )),
         ],),
         new Padding(padding: EdgeInsets.all(12.0),),
-        new Text("Events Entered", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0),),
+        new Text("Events Entered", textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0),),
         eventText(),
       ]),
     );
@@ -98,7 +98,7 @@ class AttendeePage extends StatelessWidget {
             child: Text(
               _json['gamerTag'][0].toUpperCase(),
               textAlign: TextAlign.center,
-              style: new TextStyle(fontSize: 120.0, color: Colors.white, fontFamily: 'Raleway', ),
+              style: new TextStyle(fontSize: 90.0, color: Colors.white, fontFamily: 'Raleway', ),
             )));
   }
   //Used to add twitter icon if necessary
@@ -107,7 +107,7 @@ class AttendeePage extends StatelessWidget {
       return new FlatButton(onPressed: (){
         Future<Null> launched = _launchInBrowser('https:/twitch.tv/' + _json['player']['twitchStream']);
       }, child: Image.asset('assets/twitch.icon.png',
-          height: 25.0, width: 25.0),
+          height: 20.0, width: 20.0),
       color: Colors.deepPurple,) ;
     }
     return new Text('');
@@ -120,8 +120,8 @@ class AttendeePage extends StatelessWidget {
         Future<Null> laucnhed = _launchInBrowser('https:/twitter.com/' + _json['player']['twitterHandle']);
       }, child: new Image.asset(
         'assets/twitter.icon.png',
-        height: 25.0,
-        width: 25.0,
+        height: 20.0,
+        width: 20.0,
       ),
       color: Colors.lightBlue,);
     }

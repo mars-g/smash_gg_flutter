@@ -9,7 +9,6 @@ class EventCard extends StatelessWidget {
   final Map _json;
   //final Future<Null> launched;
 
-
   EventCard(this._json);
 
   @override
@@ -30,7 +29,8 @@ class EventCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   //first child is the title of the event
-                  new Flexible(child: Text(
+                  new Flexible(
+                      child: Text(
                     _json['name'],
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.clip,
@@ -66,6 +66,7 @@ class EventCard extends StatelessWidget {
       ),
     );
   }
+
   Future<Null> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: false);
@@ -81,6 +82,7 @@ class EventCard extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
+
   ///Creates the entrants box based on the tourney state
   ///
   ///Entrants box is a list of the top 10 entrants if tourney is unfinished.
@@ -92,53 +94,61 @@ class EventCard extends StatelessWidget {
       return new FutureBuilder(
           future: _api.getTopPlacers(_json['slug']),
           builder: (context, snapshot) {
-            if (snapshot.hasData){
-              if (snapshot.data.length == 0){
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
                 return new Text(" ");
               }
               String text = '';
               // loop through all top attendees
-              for (int i = 0; i < 10 && i < snapshot.data.length; i++){
-                if (i == 5 || i == 7 || i ==9){
+              for (int i = 0; i < 10 && i < snapshot.data.length; i++) {
+                if (i == 5 || i == 7 || i == 9) {
                   text += (i).toString();
-                }
-                else {
-                  text += (i+1).toString();
+                } else {
+                  text += (i + 1).toString();
                 }
 
                 text += ': ';
                 //see if there is only one player per participant
-                if(snapshot.data[i]['players'].length == 1){
+                if (snapshot.data[i]['players'].length == 1) {
                   //see if there is a sponsor
-                  if (snapshot.data[i]['players'][0]['prefix'] != null &&  snapshot.data[i]['players'][0]['prefix'] != ""){
+                  if (snapshot.data[i]['players'][0]['prefix'] != null &&
+                      snapshot.data[i]['players'][0]['prefix'] != "") {
                     text += snapshot.data[i]['players'][0]['prefix'];
                     text += '|';
                   }
                   text += snapshot.data[i]['players'][0]['gamerTag'];
                   text += '\n';
-                }
-                else {
-                  for (int j = 0; j < snapshot.data[i]['players'].length; j++){
-                    if (snapshot.data[i]['players'][j]['prefix'] != null &&  snapshot.data[i]['players'][j]['prefix'] != ""){
+                } else {
+                  for (int j = 0; j < snapshot.data[i]['players'].length; j++) {
+                    if (snapshot.data[i]['players'][j]['prefix'] != null &&
+                        snapshot.data[i]['players'][j]['prefix'] != "") {
                       text += snapshot.data[i]['players'][j]['prefix'];
                       text += '|';
                     }
                     text += snapshot.data[i]['players'][j]['gamerTag'];
-                    if (j != snapshot.data[i]['players'].length -1) {
+                    if (j != snapshot.data[i]['players'].length - 1) {
                       text += '/';
                     }
                   }
                   text += '\n';
                 }
-
               }
-              return new Text(text,
-                textAlign: TextAlign.left,);
-            }
-            else if (snapshot.hasError){
+              return new Align(alignment: Alignment(-1.0, 0.0),
+                  child: RichText(
+                    text: TextSpan(
+                        text: 'Placings: \n',
+                        style: TextStyle(fontSize: 14.0, color: Colors.red),
+                        children: <TextSpan>[
+                          new TextSpan(
+                              text: text,
+                              style:
+                              TextStyle(fontSize: 14.0, color: Colors.black)),
+                        ]),
+                    textAlign: TextAlign.left,
+                  ));
+            } else if (snapshot.hasError) {
               return new Text("${snapshot.error}");
-            }
-            else {
+            } else {
               return new Text(" ");
             }
           });
@@ -148,45 +158,54 @@ class EventCard extends StatelessWidget {
       return new FutureBuilder(
           future: _api.getTopAttendees(_json['slug']),
           builder: (context, snapshot) {
-            if (snapshot.hasData){
-              if (snapshot.data.length == 0){
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
                 return new Text(" ");
               }
-              String text = 'Entrants: ';
+              String text = '';
               // loop through all top attendees
-              for (int i = 0; i < 10 && i < snapshot.data.length; i++){
+              for (int i = 0; i < 10 && i < snapshot.data.length; i++) {
                 //see if there is only one player per participant
-                if(snapshot.data[i]['players'].length == 1){
+                if (snapshot.data[i]['players'].length == 1) {
                   //see if there is a sponsor
-                  if (snapshot.data[i]['players'][0]['prefix'] != null &&  snapshot.data[i]['players'][0]['prefix'] != ""){
+                  if (snapshot.data[i]['players'][0]['prefix'] != null &&
+                      snapshot.data[i]['players'][0]['prefix'] != "") {
                     text += snapshot.data[i]['players'][0]['prefix'];
                     text += '|';
                   }
                   text += snapshot.data[i]['players'][0]['gamerTag'];
-                  text += '   ';
-                }
-                else {
-                  for (int j = 0; j < snapshot.data[i]['players'].length; j++){
-                    if (snapshot.data[i]['players'][j]['prefix'] != null &&  snapshot.data[i]['players'][j]['prefix'] != ""){
+                  text += '\n';
+                } else {
+                  for (int j = 0; j < snapshot.data[i]['players'].length; j++) {
+                    if (snapshot.data[i]['players'][j]['prefix'] != null &&
+                        snapshot.data[i]['players'][j]['prefix'] != "") {
                       text += snapshot.data[i]['players'][j]['prefix'];
                       text += '|';
                     }
                     text += snapshot.data[i]['players'][j]['gamerTag'];
-                    if (j != snapshot.data[i]['players'].length -1) {
+                    if (j != snapshot.data[i]['players'].length - 1) {
                       text += '/';
                     }
                   }
-                  text += '\t';
+                  text += '\n';
                 }
-
               }
-              return new Text(text,
-              textAlign: TextAlign.left,);
-            }
-            else if (snapshot.hasError){
+              return new Align(alignment: Alignment(-1.0, 0.0),
+                  child: RichText(
+                text: TextSpan(
+                    text: 'Entrants: \n',
+                    style: TextStyle(fontSize: 14.0, color: Colors.red),
+                    children: <TextSpan>[
+                      new TextSpan(
+                          text: text,
+                          style:
+                              TextStyle(fontSize: 14.0, color: Colors.black)),
+                    ]),
+                textAlign: TextAlign.left,
+              ));
+            } else if (snapshot.hasError) {
               return new Text("${snapshot.error}");
-            }
-            else {
+            } else {
               return new Text(" ");
             }
           });
