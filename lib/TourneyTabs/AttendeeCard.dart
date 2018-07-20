@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class AttendeeCard extends StatelessWidget {
   final Map _json;
+  final String slug;
   final int r;
   final int g;
   final int b;
@@ -10,7 +11,7 @@ class AttendeeCard extends StatelessWidget {
   final height = 50.0;
   final width = 50.0;
 
-  AttendeeCard(this._json, this.r, this.b, this.g);
+  AttendeeCard(this._json, this.slug, this.r, this.b, this.g);
 
   Widget addImage() {
     if (_json['player']['images'].length != 0) {
@@ -40,7 +41,7 @@ class AttendeeCard extends StatelessWidget {
       child: InkWell(
           onTap: () {
             Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext context) => new AttendeePage(_json, r,g,b)));
+                builder: (BuildContext context) => new AttendeePage(_json, slug, r,g,b)));
           },
           highlightColor: Theme.of(context).accentColor,
           splashColor: Theme.of(context).accentColor,

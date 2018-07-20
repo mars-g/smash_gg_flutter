@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
+import 'api.dart';
+import 'TourneyTabs/EventCard.dart';
 
 class AttendeePage extends StatelessWidget {
   final Map _json;
+  final String slug;
   final height = 150.0;
   final width = 150.0;
   final int r;
   final int g;
   final int b;
 
-  AttendeePage(this._json, this.r, this.g, this.b);
+  AttendeePage(this._json, this.slug, this.r, this.g, this.b);
 
   @override
   build(BuildContext context) {
@@ -46,17 +49,28 @@ class AttendeePage extends StatelessWidget {
   }
 
   Widget eventText(){
-    String text = '';
-    if (_json['events'].length == 0){
-      return new Text('None');
-    }
-    text += _json['events'][0]['name'];
-
-    for (int i = 1; i < _json['events'].length; i++){
-      text +='\n';
-      text += _json['events'][i]['name'];
-    }
-    return new Text(text, style: TextStyle(fontSize: 16.0),textAlign: TextAlign.left, overflow: TextOverflow.ellipsis,);
+    Api _api = new Api();
+    return new FutureBuilder(
+      future: _api.getTourneyEvents(slug),
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          return new Flexible( child: ListView.builder(
+            shrinkWrap: false,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index){
+              return EventCard(snapshot.data[index]);
+            },
+          ));
+        }
+        else if (snapshot.hasError){
+          return new Text("${snapshot.error}");
+        }
+        else {
+          return new Container(child:CircularProgressIndicator());
+        }
+      },
+    );
   }
 
   Widget twitRow(){
