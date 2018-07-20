@@ -12,26 +12,19 @@ class TourneyPage extends StatefulWidget {
   TourneyPage(this._json);
 
   @override
-  _TourneyPageState createState() => new _TourneyPageState(_json, 'Home');
+  _TourneyPageState createState() => new _TourneyPageState(_json);
 }
 
 class _TourneyPageState extends State<TourneyPage> with SingleTickerProviderStateMixin{
   final Map _json;
-  String _pageState;
   TabController controller;
 
-  _TourneyPageState(this._json, this._pageState);
+  _TourneyPageState(this._json);
 
   @override
   void initState(){
     super.initState();
     controller = new TabController(length: 3, vsync: this);
-  }
-  void switchPage(String chosenPage) {
-    setState(() {
-      _pageState = chosenPage;
-
-    });
   }
   @override
   void dispose(){

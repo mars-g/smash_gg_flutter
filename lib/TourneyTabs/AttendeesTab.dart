@@ -101,7 +101,7 @@ class _AttendeesTabState extends State<AttendeesTab> {
                         scrollDirection: Axis.vertical,
                         itemCount: snapshot.data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return AttendeeCard(snapshot.data[index], x + rng.nextInt(100),x + rng.nextInt(100), x + rng.nextInt(100));
+                          return AttendeeCard(snapshot.data[index], _json['slug'], x + rng.nextInt(100),x + rng.nextInt(100), x + rng.nextInt(100));
                         },
                       ));
                 } else {
