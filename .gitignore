@@ -3,7 +3,8 @@
 .idea
 .packages
 .pub/
-
+my-release-key.keystore
+android/key.properties
 build/
 assets/config.json
 .flutter-plugins

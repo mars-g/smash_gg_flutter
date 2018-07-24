@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'TourneyTabs/AttendeesTab.dart';
 import 'TourneyTabs/EventTab.dart';
+import 'AboutPage.dart';
 import 'TourneyTabs/HomeTab.dart';
 
 ///Represents the page for a given tourney
@@ -32,7 +33,11 @@ class _TourneyPageState extends State<TourneyPage> with SingleTickerProviderStat
     super.dispose();
   }
 
-  void _doNothing(){}
+  void doNil() {
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (BuildContext context) =>
+        new AboutPage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +46,12 @@ class _TourneyPageState extends State<TourneyPage> with SingleTickerProviderStat
         title: new Text(_json['name']),
         actions: <Widget>[
           new FlatButton(
-            onPressed: _doNothing,
+            onPressed: doNil,
             //color: Colors.redAccent[700],
             color: Colors.white12,
             shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
             child: Text(
-              "Login",
+              "About",
               style: new TextStyle(
                 fontSize: 24.0,
                 color: Colors.white,
