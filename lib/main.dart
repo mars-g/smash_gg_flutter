@@ -3,7 +3,9 @@ import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
 import 'prefs.dart';
+import 'dart:async';
 import 'package:map_view/map_view.dart';
+import 'package:google_maps_webservice/places.dart' as places;
 
 //put your api key here
 final apiKey = "";
@@ -67,6 +69,8 @@ class _MyHomePageState extends State<MyHomePage> {
   var countryCode = '';
   var addrState = 'null';
   var _selection;
+  var distance = "50mi";
+  var distFrom = "";
 
   //this variable will be updated depending on whether usa or canada is chosen
   List<String> regions = [""];
@@ -160,6 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _updateFilters(var value) {
+    if (value == 10 && filterChecks[value] == false){
+      showDialog(context: context,
+      builder: (BuildContext context) => new StatefulDialog2(title: new Text("Choose City")));
+    }
     if (value == 9 && filterChecks[value] == false) {
       regions = [""];
 
@@ -172,9 +180,12 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       //check if value is the location value
       //Switch the value of the filter
-      if (value == 9 && filterChecks[9] == true) {
+      if (value == 9 && filterChecks[value] == true) {
         countryCode = '';
         addrState = 'null';
+      }
+      if (value == 10 && filterChecks[value] == true) {
+        distFrom = '';
       }
       filterChecks[value] = !filterChecks[value];
       pageNum = 1;
@@ -273,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(8.0)),
               child: Text(
-                "Login",
+                "About",
                 style: new TextStyle(
                   fontSize: 24.0,
                   color: Colors.white,
@@ -289,6 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (BuildContext context) {
                   var itemList = new List<PopupMenuItem>();
                   for (int j = 0; j < gamesTexts.length; j++) {
+
                     itemList.add(CheckedPopupMenuItem(
                       value: j,
                       checked: gameChecks[j],
@@ -314,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
             new Container(
               child: new FutureBuilder(
                 future: _api.getListOfTourneys(searchTerm, filterChecks,
-                    currentGameID, countryCode, addrState, pageNum),
+                    currentGameID, countryCode, addrState, pageNum, distFrom, distance),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
@@ -365,6 +377,10 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (BuildContext context) {
               var itemList = new List<PopupMenuItem>();
               for (int i = 0; i < filterTexts.length; i++) {
+                //add a divider
+                if (i == 2 || i == 4 || i == 9 || i == 11 || i == 12){
+                  itemList.add(PopupMenuItem(child: PopupMenuDivider()));
+                }
                 itemList.add(
                     createPopupMenuItem(filterTexts[i], filterChecks[i], i));
               }
@@ -584,6 +600,105 @@ class _StatefulDialogState extends State<StatefulDialog>{
           ],
         ),
     );
+  }
+
+}
+
+class StatefulDialog2 extends StatefulWidget {
+  final Widget title;
+  final Widget content;
+  StatefulDialog2({this.title: const Text(""), this.content: const Text(""),});
+
+  @override
+  _StatefulDialogState2 createState() => new _StatefulDialogState2(title: this.title, content: this.content);
+}
+
+
+//Stateful Dialog for updating alert dialog
+class _StatefulDialogState2 extends State<StatefulDialog2>{
+  final Widget title;
+  final Widget content;
+  var radioValue = 1;
+  _StatefulDialogState2({this.title: const Text(""), this.content: const Text("")});
+
+  void updateRadio(int value){
+    setState(() {
+      radioValue = value;
+    });
+    if (value == 0){
+      _myHomePageState.distance = "10mi";
+    }
+    else if (value == 1){
+      _myHomePageState.distance = "50mi";
+    }
+    else if (value == 2){
+      _myHomePageState.distance = "100mi";
+    }
+    else if (value == 3){
+      _myHomePageState.distance = "250mi";
+    }
+  }
+
+  @override
+  Widget build(BuildContext content){
+    return new AlertDialog(
+      title: this.title,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(children: <Widget>[Radio<int>(
+              value: 0,
+              groupValue: radioValue,
+              onChanged: updateRadio,
+            ),
+            Text("10 mi")
+          ]),
+          Row(children: <Widget>[
+            Radio<int>(
+              value: 1,
+              groupValue: radioValue,
+              onChanged: updateRadio,
+            ),
+            Text("50 mi")
+          ]),
+          Row(children: <Widget>[
+            Radio<int>(
+              value: 2,
+              groupValue: radioValue,
+              onChanged: updateRadio,
+            ),
+            Text("100 mi")
+          ]),
+          Row(children: <Widget>[
+            Radio<int>(
+              value: 3,
+              groupValue: radioValue,
+              onChanged: updateRadio,
+            ),
+            Text("250 mi")
+          ]),
+          TextField(
+            onSubmitted: listPlaces,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              fillColor: Colors.grey[150],
+              filled: true,
+              hintText: "Search for a tourney",
+              prefixIcon: Icon(Icons.search),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Future listPlaces(String input) async{
+    var placeApi = new places.GoogleMapsPlaces(apiKey);
+    var response = await placeApi.searchByText(input);
+    _myHomePageState.setState((){
+      _myHomePageState.distFrom = response.results[0].geometry.location.lat.toString() + ',' + response.results[0].geometry.location.lng.toString();
+    });
+    Navigator.of(context).pop();
+    return;
   }
 
 }

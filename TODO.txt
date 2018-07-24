@@ -1,11 +1,13 @@
 TODO:
     Main Page
         places to filter options
+            done, but perhaps could be done with autocomplete, should a library for it appear in the future
 	Event Tab
 	    brackets when event tabs are clicked on
 	        Fine for now, but should be changed eventually
 	AttendeePage
 	    Show recent tourney placings
+	        Fine for now, but might want to be updated
 
 
 

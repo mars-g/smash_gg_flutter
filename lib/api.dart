@@ -18,7 +18,7 @@ class Api {
 
 
 
-  Future getListOfTourneys(String searchTerm, List filters, String gameID, String countryCode, String addrState, int pageNum) async{
+  Future getListOfTourneys(String searchTerm, List filters, String gameID, String countryCode, String addrState, int pageNum, String distFrom, String distance) async{
     //first step is to generate filter params
     String upcoming = 'false';
     String featured = '';
@@ -92,7 +92,7 @@ class Api {
     if (addrState != 'null'){
       addrState = '"' + addrState + '"';
     }
-    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":$upcoming,"videogameIds":$gameID,' + '"countryCode":"$countryCode",' + '"addrState":$addrState' + name + featured + regOpen + eventRegOpen + attendeeCount + isLeague + online + offline + '};page=$pageNum;per_page=15');
+    final uri = Uri.https(_url2, '/api/-/gg_api./public/tournaments/schedule;filter={"upcoming":$upcoming,"videogameIds":$gameID,' + '"countryCode":"$countryCode",' + '"addrState":$addrState,' + '"distance":"$distance",' + '"distanceFrom":"$distFrom"' +name + featured + regOpen + eventRegOpen + attendeeCount + isLeague + online + offline + '};page=$pageNum;per_page=15');
     final jsonResponse = await _getJson(uri);
     if (jsonResponse == null || jsonResponse['items'] == null) {
       print('Error retrieving tournament.');
