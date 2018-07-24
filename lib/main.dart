@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
+import 'AboutPage.dart';
 import 'prefs.dart';
 import 'dart:async';
 import 'package:map_view/map_view.dart';
@@ -203,7 +204,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void doNil() {}
+  void doNil() {
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (BuildContext context) =>
+        new AboutPage()));
+  }
 
   void incrementPage() {
     setState(() {
