@@ -108,6 +108,50 @@ class Api {
     return jsonResponse['items']['entities'];
   }
 
+  ///Login api parser
+  ///
+  /// Base url is smash.gg/api/-
+  /// Returns 400 on bad login, 200 on good login
+  /// Bad login returns a mad with key value pair login,failure
+  /// Good login returns map of entities data
+  Future<Map> loginPost(String email, String password, bool rememberMe) async{
+    final url = "https://smash.gg/api/-";
+    Map params = {
+      "requests" :
+      {
+      "g0" :
+      {
+        "operastion" : "create",
+        "resource" : "gg_api./user/login",
+        "params" : {
+          "email" : email,
+          "expand" : "{}",
+          "password" : password,
+          "rememberMe" : rememberMe,
+          "validationKey" : "LOGIN_userlogin",
+        }
+      },
+      },
+    };
+    final jsonResponse = await _postJson(url, params);
+    if (jsonResponse == null){
+      print('Unable to send request');
+      print(jsonResponse);
+      print(url);
+      return null;
+    }
+    if (jsonResponse['message'] != null &&  jsonResponse['message']['success'] == "false"){
+      return {"login" : "failure"};
+    }//failed to login in
+    else if (jsonResponse['g0'] && jsonResponse['g0']['meta']['statusCode'] == 200){
+      return jsonResponse['g0']['data']['entities'];
+    }//successful login
+
+    else {
+      return null;
+    }
+
+  }
 
   ///Attempt at parsing the post api for smashgg
   ///
