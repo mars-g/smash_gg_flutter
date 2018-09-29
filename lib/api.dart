@@ -115,13 +115,13 @@ class Api {
   /// Bad login returns a mad with key value pair login,failure
   /// Good login returns map of entities data
   Future<Map> loginPost(String email, String password, bool rememberMe) async{
-    final url = "https://smash.gg/api/-";
+    final url = "https://" + _url2 + "/api/-";
     Map params = {
       "requests" :
       {
       "g0" :
       {
-        "operastion" : "create",
+        "operation" : "create",
         "resource" : "gg_api./user/login",
         "params" : {
           "email" : email,
@@ -143,13 +143,8 @@ class Api {
     if (jsonResponse['message'] != null &&  jsonResponse['message']['success'] == "false"){
       return {"login" : "failure"};
     }//failed to login in
-    else if (jsonResponse['g0'] && jsonResponse['g0']['meta']['statusCode'] == 200){
-      return jsonResponse['g0']['data']['entities'];
-    }//successful login
+    return jsonResponse['g0']['data']['entities'];
 
-    else {
-      return null;
-    }
 
   }
 
@@ -303,7 +298,6 @@ class Api {
       print(uri);
       return null;
     }
-    print(uri);
     return jsonResponse['items']['entities']['attendee'];
   }
 
@@ -368,11 +362,13 @@ class Api {
       String jsonString = json.encode(params);
       Map<String,String> headers = {
         'Content-type' : 'application/json',
-        'Accept' : 'gzip,deflate,br'
+        'Accept' : '*'
       };
+
       final httpResponse =
           await http.post(url, body: jsonString, headers: headers);
       if (httpResponse.statusCode != HttpStatus.OK) {
+        print(httpResponse);
         return null;
       }
 

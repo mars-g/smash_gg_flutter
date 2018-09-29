@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
+import 'LoginPage.dart';
 import 'AboutPage.dart';
 import 'prefs.dart';
 import 'dart:async';
@@ -207,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void doNil() {
     Navigator.of(context).push(new MaterialPageRoute(
         builder: (BuildContext context) =>
-        new AboutPage()));
+        new LoginPage()));
   }
 
   void incrementPage() {
@@ -289,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(8.0)),
               child: Text(
-                "About",
+                "Login",
                 style: new TextStyle(
                   fontSize: 24.0,
                   color: Colors.white,

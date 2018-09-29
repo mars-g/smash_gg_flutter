@@ -25,6 +25,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  font_awesome_flutter: ^8.0.1
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -43,10 +45,22 @@ flutter:
     - assets/twitter.icon.png
     - assets/twitch.icon.png
     - assets/config.json
+    - assets/img/login_logo.png
 
   fonts:
-     - family: Raleway
-       fonts:
+    - family: WorkSansSemiBold
+      fonts:
+        - asset: assets/fonts/Work_Sans/WorkSans-Semibold.ttf
+
+    - family: WorkSansBold
+      fonts:
+        - asset: assets/fonts/Work_Sans/WorkSans-Bold.ttf
+
+    - family: WorkSansMedium
+      fonts:
+        - asset: assets/fonts/Work_Sans/WorkSans-Medium.ttf
+    - family: Raleway
+      fonts:
         - asset: third_party/Raleway-Regular.ttf
 
 
