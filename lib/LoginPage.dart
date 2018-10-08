@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smash_gg/style/theme.dart' as Theme;
 import 'package:smash_gg/utils/bubble_indication_painter.dart';
-
+import 'package:smash_gg/main.dart';
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
 

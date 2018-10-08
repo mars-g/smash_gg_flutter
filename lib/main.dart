@@ -74,6 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
   var distance = "50mi";
   var distFrom = "";
 
+  //saves login information
+  var loginJson;
+
   //this variable will be updated depending on whether usa or canada is chosen
   List<String> regions = [""];
 
