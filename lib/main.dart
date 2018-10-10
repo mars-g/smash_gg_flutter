@@ -3,7 +3,6 @@ import 'api.dart';
 import 'TourneyItem.dart';
 import 'TourneyPage.dart';
 import 'LoginPage.dart';
-import 'AboutPage.dart';
 import 'prefs.dart';
 import 'dart:async';
 import 'package:map_view/map_view.dart';

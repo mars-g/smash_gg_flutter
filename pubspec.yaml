@@ -4,13 +4,12 @@ description: Companion App For Smash.gg
 dependencies:
   flutter:
     sdk: flutter
-  flutter_webview_plugin: ^0.1.6
-  flutter_markdown: ^0.1.5
+  flutter_webview_plugin: ^0.2.1+2
+  flutter_markdown: ^0.2.0
   url_launcher: ^3.0.2
   shared_preferences: ^0.4.2
   map_view: ^0.0.12
   google_maps_webservice: ^0.0.5
-  flutter_launcher_icons: ^0.5.2
 
 flutter_icons:
   image_path: "logo.png"
@@ -48,20 +47,23 @@ flutter:
     - assets/img/login_logo.png
 
   fonts:
+
+    - family: Raleway
+      fonts:
+          - asset: third_party/Raleway-Regular.ttf
+
     - family: WorkSansSemiBold
       fonts:
-        - asset: assets/fonts/Work_Sans/WorkSans-Semibold.ttf
+        - asset: third_party/Work_Sans/WorkSans-Semibold.ttf
 
     - family: WorkSansBold
       fonts:
-        - asset: assets/fonts/Work_Sans/WorkSans-Bold.ttf
+        - asset: third_party/Work_Sans/WorkSans-Bold.ttf
 
     - family: WorkSansMedium
       fonts:
-        - asset: assets/fonts/Work_Sans/WorkSans-Medium.ttf
-    - family: Raleway
-      fonts:
-        - asset: third_party/Raleway-Regular.ttf
+        - asset: third_party/Work_Sans/WorkSans-Medium.ttf
+
 
 
   # To add assets to your application, add an assets section, like this:

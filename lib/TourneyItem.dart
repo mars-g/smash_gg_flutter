@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'TourneyPage.dart';
-import 'package:smash_gg/api.dart';
 import 'prefs.dart';
 
 //Map of months from their integer rep
@@ -30,18 +29,22 @@ class TourneyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Api _api = new Api();
     return new Card(
       child: InkWell(
         onTap: () {
+          //Obtain list of recent tourneys from shared preferences
           List<String> recentList = Prefs.getStringList('recentTourneys');
+          //if list is empty, add this tourney to the list
           if(recentList[0] == ""){
             recentList[0] = _json['slug'];
           }
+          //check if tourney is in list
+            //if true, move it to top of list
           else if (recentList.indexOf(_json['slug']) != -1){
             recentList.remove(_json['slug']);
             recentList.insert(0,_json['slug']);
           }
+          //if list is full remove last list and add new tourney
           else if (recentList.length == 10){
             recentList.insert(0, _json['slug']);
             recentList.removeLast();
