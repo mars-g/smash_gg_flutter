@@ -17,6 +17,7 @@ class AttendeePage extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+    print(_json);
     return new Scaffold(
       appBar: new AppBar(
         title: (_json['gamerTag'] != null) ? new Text(_json['gamerTag']) : new Text(""),
@@ -84,7 +85,6 @@ class AttendeePage extends StatelessWidget {
       );
     }
     else if (_json['player']['twitterHandle'] != null){
-      print("HERE");
       return getTwitterIcon();
     }
     else if (_json['player']['twitchStream'] != null){
@@ -95,11 +95,12 @@ class AttendeePage extends StatelessWidget {
   }
   Widget attendeeImage(){
     if (_json['player']['images'].length != 0) {
-      return new Image.network(
+      return new FlatButton(onPressed: (){Future<Null> laucnhed = _launchInBrowser(url + slug + '/attendee/' + _json['id'].toString());},
+          child: Image.network(
         _json['player']['images'][0]['url'],
         height: height,
         width: width,
-      );
+      ));
     }
 
 

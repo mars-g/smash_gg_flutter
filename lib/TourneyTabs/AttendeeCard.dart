@@ -37,6 +37,8 @@ class AttendeeCard extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+
+
     return new Card(
       child: InkWell(
           onTap: () {
@@ -47,7 +49,7 @@ class AttendeeCard extends StatelessWidget {
           splashColor: Theme.of(context).accentColor,
           child: Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 addImage(),
                 new Flexible(
@@ -80,8 +82,11 @@ class AttendeeCard extends StatelessWidget {
 
   Widget eventText(){
     String text = '';
+    if (_json['events'] == null){
+      return new Text('Spectator');
+    }
     if (_json['events'].length == 0){
-      return new Text('');
+      return new Text('Spectator');
     }
 
     if (_json['events'][0]['name'].length > 20) {

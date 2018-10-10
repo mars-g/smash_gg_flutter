@@ -99,8 +99,6 @@ class Api {
       print(uri);
       return null;
     }
-    print(uri);
-    //print(uri);
     if (jsonResponse['items']['entities']['tournament'] is List){
       return jsonResponse['items']['entities']['tournament'];
 
