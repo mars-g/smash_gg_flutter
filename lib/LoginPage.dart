@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smash_gg/style/theme.dart' as Theme;
 import 'package:smash_gg/utils/bubble_indication_painter.dart';
 import 'package:smash_gg/main.dart';
+
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
 
@@ -14,7 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
@@ -35,12 +35,14 @@ class _LoginPageState extends State<LoginPage>
   TextEditingController signupNameController = new TextEditingController();
   TextEditingController signupPasswordController = new TextEditingController();
   TextEditingController signupConfirmPasswordController =
-  new TextEditingController();
+      new TextEditingController();
 
   PageController _pageController;
 
   Color left = Colors.black;
   Color right = Colors.white;
+
+  bool checkBoxState = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class _LoginPageState extends State<LoginPage>
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 50.0),
+                  padding: EdgeInsets.only(top: 30.0),
                   child: new Image(
                       width: 250.0,
                       height: 150.0,
@@ -332,13 +334,23 @@ class _LoginPageState extends State<LoginPage>
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () =>
-                        showInSnackBar("Login button pressed")),
+                    onPressed: _onLogin),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10.0),
+              padding: EdgeInsets.only(top: 5.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Checkbox(activeColor: Colors.black, value: checkBoxState, onChanged: (value) {setState(() {
+                      checkBoxState = value;
+                    });}),
+                    Text("Remember Me"),
+                    Padding(padding: EdgeInsets.only(left: 15.0),)
+                  ])),
+          Padding(
+            padding: EdgeInsets.only(top: 5.0),
             child: FlatButton(
                 onPressed: () {},
                 child: Text(
@@ -542,14 +554,18 @@ class _LoginPageState extends State<LoginPage>
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () =>
-                        showInSnackBar("SignUp button pressed")),
+                    onPressed: () => showInSnackBar("SignUp button pressed")),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  void _onLogin(){
+    print("HERE");
+    showInSnackBar("Login button pressed");
   }
 
   void _onSignInButtonPress() {
