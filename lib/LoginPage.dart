@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smash_gg/style/theme.dart' as Theme;
 import 'package:smash_gg/utils/bubble_indication_painter.dart';
 import 'package:smash_gg/main.dart';
+import 'package:smash_gg/api.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -43,6 +44,7 @@ class _LoginPageState extends State<LoginPage>
   Color right = Colors.white;
 
   bool checkBoxState = true;
+  Api _api = new Api();
 
   @override
   Widget build(BuildContext context) {
@@ -147,16 +149,48 @@ class _LoginPageState extends State<LoginPage>
     FocusScope.of(context).requestFocus(new FocusNode());
     _scaffoldKey.currentState?.removeCurrentSnackBar();
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(
-        value,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontFamily: "WorkSansSemiBold"),
+      content: new FutureBuilder(
+        future: _api.loginPost(loginEmailController.text, loginPasswordController.text, checkBoxState),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['users'] != null) {
+              return new Text(
+                "Login Successful",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontFamily: "WorkSansSemiBold"),
+              );
+            }
+            else {
+                return new Text(
+                  "Login Failed, please try again",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: "WorkSansSemiBold"),
+                );
+            }
+          }
+          else {
+            return new Row( mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                Text(
+              "Sending Request",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontFamily: "WorkSansSemiBold"),
+            ),
+            new CircularProgressIndicator()]);
+          }
+        },
       ),
       backgroundColor: Colors.blue,
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 5),
     ));
   }
 
@@ -564,7 +598,6 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void _onLogin(){
-    print("HERE");
     showInSnackBar("Login button pressed");
   }
 

@@ -16,6 +16,18 @@ class Api {
   final String _url2 = 'smash.gg';
 
 
+  Future unitTextSuccess() async{
+    return "Test Complete";
+  }
+
+  Future unitTestSlow() async{
+    final uri = Uri.https(_url, '/tournament/the-big-house-8');
+    final jsonResponse = await _getJson(uri);
+    print(jsonResponse);
+    return "Test Successful";
+  }
+
+
 
 
   Future getListOfTourneys(String searchTerm, List filters, String gameID, String countryCode, String addrState, int pageNum, String distFrom, String distance) async{
@@ -123,13 +135,14 @@ class Api {
         "resource" : "gg_api./user/login",
         "params" : {
           "email" : email,
-          "expand" : "{}",
+          "expand" : [],
           "password" : password,
           "rememberMe" : rememberMe,
           "validationKey" : "LOGIN_userlogin",
         }
       },
       },
+      "context" : {}
     };
     final jsonResponse = await _postJson(url, params);
     if (jsonResponse == null){
@@ -138,7 +151,7 @@ class Api {
       print(url);
       return null;
     }
-    if (jsonResponse['message'] != null &&  jsonResponse['message']['success'] == "false"){
+    if (jsonResponse['message'] != null &&  (jsonResponse['message']['success'] == false || jsonResponse['message']['success'] == "false")){
       return {"login" : "failure"};
     }//failed to login in
     return jsonResponse['g0']['data']['entities'];
@@ -354,20 +367,18 @@ class Api {
   ///Fetches and decodes a JSON object for a post request
   ///Requires a map of the params as well as the url to send post request to
   ///Some of the code taken from https://stackoverflow.com/a/49801308/9976250
-  /// Returns null if no reponse
+  /// Returns null if no response
   Future<Map<String, dynamic>> _postJson(String url, Map params) async {
     try {
       String jsonString = json.encode(params);
       Map<String,String> headers = {
-        'Content-type' : 'application/json',
-        'Accept' : '*'
+        'Content-Type' : 'application/json',
+        'Accept' : '*/*'
       };
-
       final httpResponse =
           await http.post(url, body: jsonString, headers: headers);
-      if (httpResponse.statusCode != HttpStatus.OK) {
-        print(httpResponse);
-        return null;
+      if (httpResponse.statusCode != HttpStatus.accepted) {
+        return json.decode(httpResponse.body);
       }
 
       final jsonResponse = json.decode(httpResponse.body);
@@ -391,7 +402,7 @@ class Api {
     try {
       final httpRequest = await _httpClient.getUrl(uri);
       final httpResponse = await httpRequest.close();
-      if (httpResponse.statusCode != HttpStatus.OK) {
+      if (httpResponse.statusCode != HttpStatus.ok) {
         return null;
       }
       // The response is sent as a Stream of bytes that we need to convert to a
